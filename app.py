@@ -126,7 +126,11 @@ def application(environ,start_response):
     member=dict(matches[0]);id=member['id']
     games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
     member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
-    return send({'member':member,'games':games})
+    from zoneinfo import ZoneInfo
+    from datetime import datetime
+    today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
+    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,today))]
+    return send({'member':member,'games':games,'upcoming':upcoming})
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/state' and method=='GET':
