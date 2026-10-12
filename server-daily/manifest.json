@@ -1,0 +1,77 @@
+{
+  "project": "smsg",
+  "files": [
+    {
+      "path": "app.py",
+      "sha256": "8aad10b55bc2a242fd2e91f00cf9d45918ea2df8d9c676053beca3747c3c7fc2"
+    },
+    {
+      "path": "backup-tools/backup_to_s3.py",
+      "sha256": "adb4b1d15f3bf229d086f7d10090c0bb729181bcb1d3cc2c334db2172b28acf2"
+    },
+    {
+      "path": "backup-tools/github_code_backup.py",
+      "sha256": "deaa3b96af3b030226f8b9a536debc298a97adc94eeea3277e3d98439dc81619"
+    },
+    {
+      "path": "config/nginx-smsg",
+      "sha256": "c1272ad91e9927bcbfb27f030dee10f84047b36977b9b9a8e99bb6f12bb60381"
+    },
+    {
+      "path": "config/smsg-code-backup.service",
+      "sha256": "90267b31edc2aa25f7ddd0709734c1d42356de07264d433a0c9704e63a01da3e"
+    },
+    {
+      "path": "config/smsg-code-backup.timer",
+      "sha256": "a1508a14c013717953e415c38d6a741f064b54bb9076eff3aa8906fc075f853c"
+    },
+    {
+      "path": "config/smsg-data-backup.service",
+      "sha256": "b9d90d42f79187782f5487757ed1d5acddab0c958904889e87ffc84e4db4a23d"
+    },
+    {
+      "path": "config/smsg-data-backup.timer",
+      "sha256": "eebe7a133bd106bb937289f479b81d23de2a4e7e7a550fa7e89bb93a61a2362c"
+    },
+    {
+      "path": "config/smsg-github-backup.service",
+      "sha256": "6621fa19738a6f6f5a5bbd245e7f963bcb55504087711975408b31aa48d33f3b"
+    },
+    {
+      "path": "config/smsg-github-backup.timer",
+      "sha256": "afd001a6b05aa76f6e5b9820dfdf80d9e817c2078a9d0f4d7636fea8f6e378f1"
+    },
+    {
+      "path": "config/smsg.service",
+      "sha256": "b70b24d3a7519053de015f0c9494c94bebe1de2dfd143081790792ce8dfa5976"
+    },
+    {
+      "path": "dated-results.json",
+      "sha256": "e1fb4efa6de90e1f325514c98005cb658766d952940c0b4f9c8d994b66b68796"
+    },
+    {
+      "path": "historical-scores.json",
+      "sha256": "f33c18c8d323d7d87e428339787b6c83b30a27dbb488df4323a84a653883a983"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "9fd4f1e160a2602185b7f4dd0ab88cd145a562b42236cb2a7269412092a7f99c"
+    },
+    {
+      "path": "seed.json",
+      "sha256": "56731035b2a20b1b120e60184973971c9a5c95d6ec8cfc2489201c083e4368ba"
+    },
+    {
+      "path": "static/app.js",
+      "sha256": "3be0f85027593450a0ff7f13cee9ad9d4c67b6fae0ea048b75115e1b168949c2"
+    },
+    {
+      "path": "static/index.html",
+      "sha256": "44d8f285ac3dfe525a8084106bb161b312d725bc192716c75d729a4d912495aa"
+    },
+    {
+      "path": "static/style.css",
+      "sha256": "027366c8c30d8d91279653df57d14d3d9356c7f6f9da78cf82d6f8dabc205b66"
+    }
+  ]
+}

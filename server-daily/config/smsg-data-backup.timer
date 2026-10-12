@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily SMSG data backup (Korea)
+[Timer]
+OnCalendar=*-*-* 01:25:00 Asia/Seoul
+AccuracySec=1s
+Persistent=true
+[Install]
+WantedBy=timers.target

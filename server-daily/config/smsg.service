@@ -1,0 +1,17 @@
+[Unit]
+Description=SMSG mobile ledger
+After=network.target
+[Service]
+User=smsg
+Group=smsg
+WorkingDirectory=/opt/smsg
+EnvironmentFile=/opt/smsg/.env
+ExecStart=/opt/smsg/venv/bin/gunicorn --bind 127.0.0.1:8091 --workers 2 --forwarded-allow-ips=127.0.0.1 app:application
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/smsg/data
+[Install]
+WantedBy=multi-user.target
