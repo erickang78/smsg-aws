@@ -9,3 +9,4 @@ UMask=0077
 ExecStart=/usr/bin/python3 /opt/smsg/backup-tools/backup_to_s3.py --kind code
 TimeoutStartSec=300
 Nice=10
+ExecStopPost=/usr/bin/python3 /opt/smsg/backup-tools/publish_status.py
