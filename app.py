@@ -4,6 +4,9 @@ from http.cookies import SimpleCookie
 ROOT=Path(__file__).parent
 DB=Path(os.environ.get('SMSG_DB',str(ROOT/'data'/'smsg.sqlite3')))
 
+MEAL_NOTE_3='밥값 1등 1만원, 2등 2만원, 3등 3만원'
+MEAL_NOTE_4='밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원'
+
 def connect():
  c=sqlite3.connect(DB,timeout=15);c.row_factory=sqlite3.Row;c.execute('PRAGMA foreign_keys=ON');return c
 
@@ -202,6 +205,9 @@ def application(environ,start_response):
     members=[dict(r) for r in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,))]
     if not members or len(members)>128 or len(members)!=count*size:raise ValueError(f'참가자는 {len(members)}명입니다. 조 수 × 조당 인원이 참가자 수와 같아야 합니다.')
     groups=fair_game_groups(members,count,size)
+    if count in (3,4):
+     note=c.execute('SELECT note FROM game_notes WHERE game_id=?',(id,)).fetchone()
+     if not note or note[0] in ('',MEAL_NOTE_3,MEAL_NOTE_4):c.execute('INSERT INTO game_notes VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET note=excluded.note',(id,MEAL_NOTE_4 if count==4 else MEAL_NOTE_3))
     c.execute('INSERT INTO game_groupings VALUES(?,?,?,?) ON CONFLICT(game_id) DO UPDATE SET groups_json=excluded.groups_json,group_count=excluded.group_count,group_size=excluded.group_size',(id,json.dumps(groups,ensure_ascii=False),count,size));return send({'ok':True,'groups':groups})
    if path=='/api/game-results' and method=='POST':
     id=str(body['id']);member_id=str(body['member_id']);score=body.get('score')
