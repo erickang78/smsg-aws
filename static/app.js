@@ -133,7 +133,7 @@ async function refreshProfile(){
 }
 
 function upcomingGamesView(games){
- return heading('예정 경기','오늘부터 예정된 경기입니다.')+(games.length?'<div class="cards">'+games.map(g=>`<section class="card"><div class="row"><b>${esc(g.date)}</b><span class="badge">${g.attending?'참석 완료':'참석 미등록'}</span></div><h3 class="gap">${esc(g.course)}</h3><div class="muted">페어웨이 ${g.fairway||'미확인'} · 그린 ${g.green||'미확인'}</div><div class="attendance-actions gap"><button type="button" class="primary" data-join-game="${esc(g.id)}" ${g.attending?'disabled':''}>${g.attending?'참석 완료':'참석'}</button>${g.attending&&!g.has_result?`<button type="button" class="game-delete" data-leave-game="${esc(g.id)}">참석빼기</button>`:''}</div></section>`).join('')+'</div>':'<div class="empty">예정된 경기가 없습니다.</div>');
+ return heading('예정 경기','오늘부터 예정된 경기입니다.')+(games.length?'<div class="cards">'+games.map(g=>`<section class="card"><div class="row"><b>${esc(g.date)}</b><span class="badge">${g.attending?'참석 완료':'참석 미등록'}</span></div><h3 class="gap">${esc(g.course)}</h3><div class="muted">페어웨이 ${g.fairway||'미확인'} · 그린 ${g.green||'미확인'}</div><div class="attendance-actions gap">${g.attending?'':`<button type="button" class="primary" data-join-game="${esc(g.id)}">참석</button>`}${g.attending&&!g.has_result?`<button type="button" class="game-delete" data-leave-game="${esc(g.id)}">참석빼기</button>`:''}</div></section>`).join('')+'</div>':'<div class="empty">예정된 경기가 없습니다.</div>');
 }
 
 async function joinUpcomingGame(gameId,remove=false){
