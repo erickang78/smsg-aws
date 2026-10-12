@@ -129,7 +129,7 @@ def application(environ,start_response):
     from zoneinfo import ZoneInfo
     from datetime import datetime
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
-    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,today))]
+    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,id,today))]
     return send({'member':member,'games':games,'upcoming':upcoming})
    if path=='/api/profile-join' and method=='POST':
     from datetime import datetime
@@ -141,9 +141,14 @@ def application(environ,start_response):
     game=c.execute('SELECT date FROM games WHERE id=?',(game_id,)).fetchone()
     if not game or game['date']<datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat():raise ValueError('오늘 이후 경기만 참가할 수 있습니다.')
     member_id=members[0]['id']
-    added=c.execute('INSERT OR IGNORE INTO game_participants VALUES(?,?)',(game_id,member_id)).rowcount
-    if added:c.execute('DELETE FROM game_groupings WHERE game_id=?',(game_id,))
-    return send({'ok':True,'attending':True})
+    remove=body.get('remove',False)
+    if type(remove)!=bool:raise ValueError('참석 여부를 확인해주세요.')
+    if remove:
+     if c.execute('SELECT 1 FROM game_results WHERE game_id=? AND member_id=?',(game_id,member_id)).fetchone():raise ValueError('결과 점수가 입력된 경기는 참석을 뺄 수 없습니다.')
+     changed=c.execute('DELETE FROM game_participants WHERE game_id=? AND member_id=?',(game_id,member_id)).rowcount
+    else:changed=c.execute('INSERT OR IGNORE INTO game_participants VALUES(?,?)',(game_id,member_id)).rowcount
+    if changed:c.execute('DELETE FROM game_groupings WHERE game_id=?',(game_id,))
+    return send({'ok':True,'attending':not remove})
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/state' and method=='GET':

@@ -41,3 +41,5 @@
 .match-note{grid-column:1 / -1;border:2px solid #244e3b;padding:12px;background:#f8faf4;font-size:13px;line-height:1.6}.match-note h3{font-size:14px;margin:0 0 6px}.match-note>div{white-space:pre-wrap;overflow-wrap:anywhere}
 
 .match-inline-note{display:block;margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+.attendance-actions{display:flex;gap:10px}.attendance-actions .primary{flex:1}.attendance-actions .game-delete{flex:0 0 auto}

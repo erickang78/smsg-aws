@@ -129,15 +129,15 @@ async function refreshProfile(){
  $('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=true;$('nav').hidden=true;$('.hero').hidden=true;
  document.title=m.name+' · 일조해 회원 정보';
  $('#content').innerHTML=upcomingGamesView(data.upcoming||[])+heading('회원 정보',esc(m.name))+`<section class="card"><h2>${esc(m.name)}</h2><div class="member-details"><div class="member-detail"><span>핸디</span><b>${m.handicap}</b></div><div class="member-detail"><span>참석횟수</span><b>${m.score_count}회</b></div><div class="member-detail"><span>${esc(memberNote(m).replace(/생년\s*:\s*(\d{2,4})년/,'생년 $1년생'))}</span></div><div class="member-detail"><span>마지막참석</span><b>${esc(m.last_attended||'기록 없음')}</b></div></div><section class="member-attendance-history"><h3>참가한 날 · ${data.games.length}회</h3>${data.games.length?'<ul>'+data.games.map(g=>`<li><div class="attendance-date-course"><b class="attendance-date">${esc(g.date)}</b><strong class="attendance-course">${esc(g.course)}</strong></div><span>${esc(g.score)}</span></li>`).join('')+'</ul>':'<p class="note">아직 참가 기록이 없습니다.</p>'}</section></section>`;
- document.querySelectorAll('[data-join-game]').forEach(button=>button.onclick=()=>joinUpcomingGame(button.dataset.joinGame));
+ document.querySelectorAll('[data-join-game]').forEach(button=>button.onclick=()=>joinUpcomingGame(button.dataset.joinGame));document.querySelectorAll('[data-leave-game]').forEach(button=>button.onclick=()=>joinUpcomingGame(button.dataset.leaveGame,true));
 }
 
 function upcomingGamesView(games){
- return heading('예정 경기','오늘부터 예정된 경기입니다.')+(games.length?'<div class="cards">'+games.map(g=>`<section class="card"><div class="row"><b>${esc(g.date)}</b><span class="badge">${g.attending?'참가 완료':'참가 미등록'}</span></div><h3 class="gap">${esc(g.course)}</h3><div class="muted">페어웨이 ${g.fairway||'미확인'} · 그린 ${g.green||'미확인'}</div><button type="button" class="primary full gap" data-join-game="${esc(g.id)}" ${g.attending?'disabled':''}>${g.attending?'참가 완료':'참가'}</button></section>`).join('')+'</div>':'<div class="empty">예정된 경기가 없습니다.</div>');
+ return heading('예정 경기','오늘부터 예정된 경기입니다.')+(games.length?'<div class="cards">'+games.map(g=>`<section class="card"><div class="row"><b>${esc(g.date)}</b><span class="badge">${g.attending?'참석 완료':'참석 미등록'}</span></div><h3 class="gap">${esc(g.course)}</h3><div class="muted">페어웨이 ${g.fairway||'미확인'} · 그린 ${g.green||'미확인'}</div><div class="attendance-actions gap"><button type="button" class="primary" data-join-game="${esc(g.id)}" ${g.attending?'disabled':''}>${g.attending?'참석 완료':'참석'}</button>${g.attending&&!g.has_result?`<button type="button" class="game-delete" data-leave-game="${esc(g.id)}">참석빼기</button>`:''}</div></section>`).join('')+'</div>':'<div class="empty">예정된 경기가 없습니다.</div>');
 }
 
-async function joinUpcomingGame(gameId){
+async function joinUpcomingGame(gameId,remove=false){
  if(busy)return;busy=true;
- const button=document.querySelector(`[data-join-game="${CSS.escape(gameId)}"]`);if(button)button.disabled=true;
- try{await api('profile-join','POST',{name:profileName,game_id:gameId});await refreshProfile();status('경기 참가가 등록되었습니다.')}catch(error){status(error.message);if(button)button.disabled=false}finally{busy=false}
+ const button=document.querySelector(`[${remove?'data-leave-game':'data-join-game'}="${CSS.escape(gameId)}"]`);if(button)button.disabled=true;
+ try{await api('profile-join','POST',{name:profileName,game_id:gameId,remove});await refreshProfile();status(remove?'참석을 취소했습니다.':'경기 참석이 등록되었습니다.')}catch(error){status(error.message);if(button)button.disabled=false}finally{busy=false}
 }
