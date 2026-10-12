@@ -118,8 +118,6 @@ def application(environ,start_response):
      count=a['count']+1 if a and a['reset']>now else 1;c.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?)',(ip,count,now+900 if count==1 else a['reset']));return send({'error':'비밀번호를 확인해주세요.'},'401 Unauthorized')
     c.execute('DELETE FROM attempts WHERE ip=?',(ip,));c.execute('DELETE FROM sessions WHERE expires<?',(now,));token=secrets.token_urlsafe(32);c.execute('INSERT INTO sessions VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),now+86400))
     return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
-   if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
-   if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/profile' and method=='GET':
     from urllib.parse import parse_qs
     name=parse_qs(environ.get('QUERY_STRING','')).get('name',[''])[0]
@@ -129,6 +127,8 @@ def application(environ,start_response):
     games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
     member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
     return send({'member':member,'games':games})
+   if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
+   if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/state' and method=='GET':
     meals,balance=records(c);return send({'members':[dict(r,score_count=score_summary(c,r['id'])['count'],last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]) for r in c.execute('SELECT * FROM members ORDER BY name')],'meals':meals,'rounds':[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')],'games':[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')],'opening':0,'balance':balance})
    if path=='/api/games' and method=='POST':
