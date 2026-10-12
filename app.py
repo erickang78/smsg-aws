@@ -131,6 +131,19 @@ def application(environ,start_response):
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
     upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,today))]
     return send({'member':member,'games':games,'upcoming':upcoming})
+   if path=='/api/profile-join' and method=='POST':
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    name=str(body.get('name',''));game_id=str(body.get('game_id',''))
+    c.execute('BEGIN IMMEDIATE')
+    members=c.execute('SELECT id,active FROM members WHERE name=?',(name,)).fetchall()
+    if len(members)!=1 or not members[0]['active']:raise ValueError('활동 회원을 확인해주세요.')
+    game=c.execute('SELECT date FROM games WHERE id=?',(game_id,)).fetchone()
+    if not game or game['date']<datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat():raise ValueError('오늘 이후 경기만 참가할 수 있습니다.')
+    member_id=members[0]['id']
+    added=c.execute('INSERT OR IGNORE INTO game_participants VALUES(?,?)',(game_id,member_id)).rowcount
+    if added:c.execute('DELETE FROM game_groupings WHERE game_id=?',(game_id,))
+    return send({'ok':True,'attending':True})
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/state' and method=='GET':
