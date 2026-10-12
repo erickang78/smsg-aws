@@ -89,8 +89,13 @@ def application(environ,start_response):
  def send(data,status='200 OK',headers=()):
   payload=json.dumps(data,ensure_ascii=False).encode();start_response(status,[('Content-Type','application/json; charset=utf-8'),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff')]+list(headers));return [payload]
  path=environ.get('PATH_INFO','/');method=environ.get('REQUEST_METHOD','GET')
- if path in ['/','/static/app.js','/static/style.css'] and method=='GET':
-  filename='index.html' if path=='/' else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
+ try:path=path.encode('latin-1').decode('utf-8')
+ except (UnicodeEncodeError,UnicodeDecodeError):pass
+ profile_page=False
+ if method=='GET' and path.count('/')==1 and path not in ['/','/health']:
+  with connect() as c:profile_page=c.execute('SELECT 1 FROM members WHERE name=?',(path[1:],)).fetchone() is not None
+ if (path in ['/','/static/app.js','/static/style.css'] or profile_page) and method=='GET':
+  filename='index.html' if path=='/' or profile_page else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
   start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")]);return [(ROOT/'static'/filename).read_bytes()]
  if path=='/health' and method=='GET':return send({'ok':True})
  if not path.startswith('/api/'):return send({'error':'페이지를 찾을 수 없습니다.'},'404 Not Found')
@@ -115,6 +120,15 @@ def application(environ,start_response):
     return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
+   if path=='/api/profile' and method=='GET':
+    from urllib.parse import parse_qs
+    name=parse_qs(environ.get('QUERY_STRING','')).get('name',[''])[0]
+    matches=c.execute('SELECT * FROM members WHERE name=?',(name,)).fetchall()
+    if len(matches)!=1:return send({'error':'회원을 찾을 수 없거나 같은 이름의 회원이 여러 명입니다.'},'404 Not Found')
+    member=dict(matches[0]);id=member['id']
+    games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
+    member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
+    return send({'member':member,'games':games})
    if path=='/api/state' and method=='GET':
     meals,balance=records(c);return send({'members':[dict(r,score_count=score_summary(c,r['id'])['count'],last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]) for r in c.execute('SELECT * FROM members ORDER BY name')],'meals':meals,'rounds':[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')],'games':[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')],'opening':0,'balance':balance})
    if path=='/api/games' and method=='POST':

@@ -1,9 +1,10 @@
 'use strict';
 let state,tab='members',busy=false,selectedGame=null,memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
 async function api(path,method='GET',body){const r=await fetch('/api/'+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok){if(r.status===401){$('#app').hidden=true;$('#login').hidden=false;$('#logout').hidden=true}throw Error(j.error||'요청을 처리하지 못했습니다.')}return j}
-async function refresh(){state=await api('state');$('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=false;$('#balance').textContent=money(state.balance)+'원';$('#membercount').textContent=state.members.filter(m=>m.active).length+'명의 멤버';render()}
+async function refresh(){if(profileName){await refreshProfile();return}state=await api('state');$('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=false;$('#balance').textContent=money(state.balance)+'원';$('#membercount').textContent=state.members.filter(m=>m.active).length+'명의 멤버';render()}
 $('#loginform').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;try{await api('login','POST',{password:new FormData(e.target).get('password')});e.target.reset();await refresh();status('')}catch(e){status(e.message)}finally{busy=false}};
 $('#logout').onclick=async()=>{try{await api('logout','POST',{});location.reload()}catch(e){status(e.message)}};
 $('nav').onclick=e=>{if(e.target.dataset.tab){tab=e.target.dataset.tab;render()}};
@@ -121,4 +122,11 @@ window.visualViewport?.addEventListener('resize',()=>requestAnimationFrame(fitGr
 function deleteGame(g){
  if(!confirm(`${g.date} ${g.course} 경기를 삭제할까요? 참가 명단·결과 점수·조편성이 함께 삭제되고 회원 핸디와 참석 기록이 다시 계산됩니다.`))return;
  perform(async()=>{await api('games','DELETE',{id:g.id});selectedGame=null;window.scrollTo({top:0,left:0,behavior:'instant'})},'경기를 삭제했습니다.');
+}
+
+async function refreshProfile(){
+ const data=await api('profile?name='+encodeURIComponent(profileName)),m=data.member;
+ $('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=false;$('nav').hidden=true;$('.hero').hidden=true;
+ document.title=m.name+' · 일조해 회원 정보';
+ $('#content').innerHTML=heading('회원 정보',esc(m.name))+`<section class="card"><h2>${esc(m.name)}</h2><div class="member-details"><div class="member-detail"><span>핸디</span><b>${m.handicap}</b></div><div class="member-detail"><span>참석횟수</span><b>${m.score_count}회</b></div><div class="member-detail"><span>${esc(memberNote(m).replace(/생년\s*:\s*(\d{2,4})년/,'생년 $1년생'))}</span></div><div class="member-detail"><span>마지막참석</span><b>${esc(m.last_attended||'기록 없음')}</b></div></div><section class="member-attendance-history"><h3>참가한 날 · ${data.games.length}회</h3>${data.games.length?'<ul>'+data.games.map(g=>`<li><div class="attendance-date-course"><b class="attendance-date">${esc(g.date)}</b><strong class="attendance-course">${esc(g.course)}</strong></div><span>${esc(g.score)}</span></li>`).join('')+'</ul>':'<p class="note">아직 참가 기록이 없습니다.</p>'}</section></section>`;
 }
