@@ -23,6 +23,7 @@ try:
    for name in ['smsg-code-backup.service','smsg-code-backup.timer','smsg-data-backup.service','smsg-data-backup.timer']:
     files['config/'+name]=Path('/etc/systemd/system')/name
    files['config/recovery-public.crt']=Path('/opt/kiwoom/backup-tools/recovery-public.crt')
+  if kind=='code':files['common/backup.py']=Path('/opt/kiwoom/backup-tools/backup.py')
   manifest={'format':1,'project':'smsg','kind':kind,'created_utc':now.isoformat(),'table_counts':counts,'files':[]}
   archive=stage/'backup.tar.gz'
   with tarfile.open(archive,'w:gz') as tar:

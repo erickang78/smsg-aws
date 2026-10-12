@@ -7,11 +7,15 @@
     },
     {
       "path": "backup-tools/backup_to_s3.py",
-      "sha256": "adb4b1d15f3bf229d086f7d10090c0bb729181bcb1d3cc2c334db2172b28acf2"
+      "sha256": "3a0954c54db58a275379961b9815223cd8efc4bcb021fcfe100e3ce6b561a63b"
     },
     {
       "path": "backup-tools/github_code_backup.py",
-      "sha256": "deaa3b96af3b030226f8b9a536debc298a97adc94eeea3277e3d98439dc81619"
+      "sha256": "4b8b63f434ad2b8d4a115f31c86e30940732da48997a14d9b4077c32b5544223"
+    },
+    {
+      "path": "common/backup.py",
+      "sha256": "0e78ae6d26049fcf18c4fe478bc96769abddd0e9043c044e5d703e56442594fb"
     },
     {
       "path": "config/nginx-smsg",
