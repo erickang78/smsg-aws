@@ -142,4 +142,4 @@ async function joinUpcomingGame(gameId,remove=false){
  try{await api('profile-join','POST',{name:profileName,game_id:gameId,remove});await refreshProfile();status(remove?'참석을 취소했습니다.':'경기 참석이 등록되었습니다.')}catch(error){status(error.message);if(button)button.disabled=false}finally{busy=false}
 }
 
-function defaultMealNote(count){return count===4?'밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원':'밥값 1등 1만원, 2등 2만원, 3등 3만원'}
+function defaultMealNote(count){return {2:'진팀이 이긴팀 밥사주기',3:'밥값 1등 1만원, 2등 2만원, 3등 3만원',4:'밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원',5:'밥값 1등 5천원, 2등 1만원, 3등 1만5천원, 4등 2만원, 5등 3만원'}[count]||'밥값 1등 1만원, 2등 2만원, 3등 3만원'}
