@@ -47,3 +47,5 @@
 .upcoming-course-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.upcoming-course-row h3{margin:0;min-width:0;overflow-wrap:anywhere}.upcoming-course-row .attendance-actions{flex:0 0 auto}.upcoming-course-row .attendance-actions button{flex:0 0 auto;font-size:11px;padding:6px 10px;white-space:nowrap}
 
 .upcoming-course-row .attendance-actions{flex:0 0 33.333%;justify-content:flex-end}.upcoming-course-row .attendance-actions button{width:100%;font-size:13px;padding:10px 12px}
+
+.participant-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}.participant-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.participant-side .participant-delete{margin:0}.participant-side .badge{white-space:nowrap}
