@@ -53,3 +53,5 @@
 .game-list-card-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}.game-list-card-meta{display:flex;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}.game-list-card-meta .muted{font-size:11px;white-space:nowrap}.game-list-card-meta .badge{white-space:nowrap}
 
 .game-list-aligned{align-items:center;row-gap:18px}.game-list-aligned h3,.game-list-aligned p{margin:0}.game-list-aligned>.badge,.game-list-aligned>.muted{justify-self:end;text-align:right;white-space:nowrap}.game-list-aligned>.muted{font-size:11px}
+
+.participant-side{gap:18px}
