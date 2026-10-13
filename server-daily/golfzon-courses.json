@@ -1,0 +1,3583 @@
+{
+  "source": "https://www.golfzon.com/course/main",
+  "updated_at": "2026-10-13T07:57:54.275281+00:00",
+  "courses": [
+    {
+      "id": 100001091,
+      "name": "나라시노 CC - KING",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001092,
+      "name": "나라시노 CC - QUEEN",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001093,
+      "name": "소부 CC - 소부 코스",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001094,
+      "name": "요넥스 CC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001087,
+      "name": "칠곡 아이위시 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001080,
+      "name": "군산 CC - 토너먼트",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001081,
+      "name": "군산 CC - 전주/익산",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001086,
+      "name": "바나힐스 골프클럽",
+      "region": "베트남",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001084,
+      "name": "블루캐니언 CC - 레이크",
+      "region": "태국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001085,
+      "name": "블루캐니언 CC - 캐니언",
+      "region": "태국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001082,
+      "name": "수서 골프&리조트",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001083,
+      "name": "일라이트 CC",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001066,
+      "name": "오션힐스 영천 CC - 달/해",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001065,
+      "name": "오션힐스 영천 CC - 별/달",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001064,
+      "name": "오션힐스 영천 CC - 해/별",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001067,
+      "name": "중원 GC - 고구려/백제",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001068,
+      "name": "중원 GC - 백제/신라",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001069,
+      "name": "중원 GC - 신라/고구려",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001071,
+      "name": "AI 천문봉 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001076,
+      "name": "그레이트 오크스 CC",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000364,
+      "name": "다이 하코네 CC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001073,
+      "name": "더 클래식 GC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001074,
+      "name": "레이크 머세드 GC",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001079,
+      "name": "레이크 포레스트 - 센추리",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001078,
+      "name": "세고비아 GC 인 치요다",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102560000,
+      "name": "세인트 앤드류스 - 뉴 코스",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102564096,
+      "name": "세인트 앤드류스 - 쥬빌리 코스",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001072,
+      "name": "오키드 CC",
+      "region": "기타",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001077,
+      "name": "J골프 카스미가우라",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001060,
+      "name": "로얄 포트러시 GC - 던루스 링크스",
+      "region": "기타",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001059,
+      "name": "타이헤이요 클럽 - 고텐바",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001061,
+      "name": "프레리 듄스 CC",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001063,
+      "name": "플라밍고 CC - 듄스/리버",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001062,
+      "name": "피닉스 골드 골프&컨트리클럽",
+      "region": "태국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001058,
+      "name": "티헤라스 크릭 GC",
+      "region": "미국",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102228256,
+      "name": "파인스톤 CC",
+      "region": "충청도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001057,
+      "name": "포라이즌 - 가든/스카이",
+      "region": "전라도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001056,
+      "name": "포라이즌 - 베이/가든",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001055,
+      "name": "포라이즌 - 스카이/베이",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001052,
+      "name": "용원 GC - 무학/백구",
+      "region": "경상도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001053,
+      "name": "용원 GC - 백구/백로",
+      "region": "경상도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100001051,
+      "name": "용원 GC - 백로/무학",
+      "region": "경상도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001049,
+      "name": "군자리 CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001048,
+      "name": "오르비스 GC",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001047,
+      "name": "크리스탈밸리 CC",
+      "region": "수도권",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001054,
+      "name": "동강시스타 CC",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001045,
+      "name": "아난티 중앙 - 레이크/스카이",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001044,
+      "name": "아난티 중앙 - 마운틴/레이크",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001046,
+      "name": "아난티 중앙 - 스카이/마운틴",
+      "region": "충청도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001041,
+      "name": "탄란 골프클럽",
+      "region": "베트남",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001038,
+      "name": "이글몬트 CC - 몬트/히든",
+      "region": "수도권",
+      "course_difficulty": 2.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001037,
+      "name": "이글몬트 CC - 이글/몬트",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001039,
+      "name": "이글몬트 CC - 히든/이글",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001040,
+      "name": "크리스밸리 CC",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000761,
+      "name": "해내다 CC - 마운틴/밸리",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000762,
+      "name": "해내다 CC - 밸리/스카이",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000760,
+      "name": "해내다 CC - 스카이/마운틴",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001035,
+      "name": "셔우드 힐스 골프클럽",
+      "region": "필리핀",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001034,
+      "name": "오로라 골프&리조트",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001036,
+      "name": "GTOUR AI 볼케이노",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001018,
+      "name": "뉴욕 센트럴파크 GC",
+      "region": "가상CC",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000348,
+      "name": "베스페이지-블랙코스",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100001028,
+      "name": "블루원 상주 골프리조트",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001030,
+      "name": "블루원 용인 CC - 동/서",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001029,
+      "name": "블루원 용인 CC - 서/중",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001031,
+      "name": "선저우 페닌슐라 GC - Dunes West",
+      "region": "중국",
+      "course_difficulty": 3.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100001012,
+      "name": "콜로라도 골프 클럽",
+      "region": "미국",
+      "course_difficulty": 5.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001021,
+      "name": "트럼프 내셔널 GC 콜츠 넥",
+      "region": "미국",
+      "course_difficulty": 1.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100001032,
+      "name": "하모니 골프 파크",
+      "region": "베트남",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001027,
+      "name": "해운대 CC - GOLDEN/ROYAL",
+      "region": "경상도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001025,
+      "name": "해운대 CC - ROYAL/SILK",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001026,
+      "name": "해운대 CC - SILK/GOLDEN",
+      "region": "경상도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001033,
+      "name": "GTOUR 레이크",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001023,
+      "name": "서산수 골프앤리조트",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001024,
+      "name": "썬밸리 CC (일죽)",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001019,
+      "name": "벨라 45 CC - 오너스A/오너스B",
+      "region": "강원도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001020,
+      "name": "비에이비스타 CC - 몬티/벨라",
+      "region": "수도권",
+      "course_difficulty": 1.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001013,
+      "name": "라오라오베이 골프 리조트 - EAST",
+      "region": "미국",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001014,
+      "name": "라오라오베이 골프 리조트 - WEST",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001015,
+      "name": "사츠마 골프리조트",
+      "region": "일본",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001016,
+      "name": "피닉스 골드 골프 방콕",
+      "region": "태국",
+      "course_difficulty": 5.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100001011,
+      "name": "설악 썬밸리 CC - 밸리/설악",
+      "region": "강원도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001009,
+      "name": "설악 썬밸리 CC - 설악/썬",
+      "region": "강원도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001010,
+      "name": "설악 썬밸리 CC - 썬/밸리",
+      "region": "강원도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001005,
+      "name": "알파인 골프리조트 치앙마이",
+      "region": "태국",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001008,
+      "name": "오투 골프&리조트 - 백두/함백",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001007,
+      "name": "오투 골프&리조트 - 태백/백두",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001006,
+      "name": "오투 골프&리조트 - 함백/태백",
+      "region": "강원도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000998,
+      "name": "김제 스파힐스 CC",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000999,
+      "name": "로드힐스 골프&리조트 - 힐스/로드",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001000,
+      "name": "샴발라 CC",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100001004,
+      "name": "해피니스 CC - HIDDEN/HEALING",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000987,
+      "name": "더크로스비 GC - 샬롯/아리아",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102294272,
+      "name": "스톤비치 CC",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000990,
+      "name": "지산 CC - 남/서",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000989,
+      "name": "지산 CC - 동/남",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000991,
+      "name": "지산 CC - 서/동",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001097,
+      "name": "YJC GC - 드림/에이스",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100001098,
+      "name": "YJC GC - 에이스/챌린지",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100001096,
+      "name": "YJC GC - 챌린지/드림",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000983,
+      "name": "베버리 플레이스 GC",
+      "region": "필리핀",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000984,
+      "name": "오너스 GC",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000977,
+      "name": "골프존카운티 영암45 - 카일필립스",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000981,
+      "name": "마이다스레이크 이천 - 마이다스/올림푸스",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000979,
+      "name": "마이다스레이크 이천 - 올림푸스/타이탄",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000980,
+      "name": "마이다스레이크 이천 - 타이탄/마이다스",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000982,
+      "name": "울진마린 CC",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000974,
+      "name": "로드힐스 골프&리조트 - 레이크/힐스",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000973,
+      "name": "로드힐스 골프&리조트 - 로드/레이크",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000972,
+      "name": "마이다스밸리 청평 GC",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000975,
+      "name": "비에이비스타 CC - 보나/호박",
+      "region": "수도권",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000976,
+      "name": "코스모스 링스",
+      "region": "전라도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000969,
+      "name": "더크로스비 GC - 빌리/샬롯",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000968,
+      "name": "더크로스비 GC - 아리아/빌리",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000970,
+      "name": "비에이비스타 CC - 비스타/라고",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000971,
+      "name": "아놀드 파머 베이힐 GC",
+      "region": "미국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000963,
+      "name": "마우나오션 CC - 마우나/블루",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000964,
+      "name": "마우나오션 CC - 블루/오션",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000965,
+      "name": "마우나오션 CC - 오션/마우나",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000960,
+      "name": "포도 CC - 샤인/포도",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000962,
+      "name": "포도 CC - 자두/샤인",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000961,
+      "name": "포도 CC - 포도/자두",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000957,
+      "name": "플라밍고 CC - 링크스/파크",
+      "region": "충청도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000956,
+      "name": "GTOUR 포레스트",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000947,
+      "name": "그린필드 CC",
+      "region": "제주도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000952,
+      "name": "스릭슨 브레이브 CC - 스릭슨/젝시오",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000953,
+      "name": "스릭슨 브레이브 CC - 스릭슨/클리브랜드",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000949,
+      "name": "힐데스하임 CC - HILL/VALLEY",
+      "region": "충청도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000948,
+      "name": "힐데스하임 CC - LAKE/HILL",
+      "region": "충청도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000950,
+      "name": "힐데스하임 CC - VALLEY/LAKE",
+      "region": "충청도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000951,
+      "name": "GTOUR 파인",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000939,
+      "name": "모카 CC",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000943,
+      "name": "벨라 45 CC - 마스터즈C/마스터즈D",
+      "region": "강원도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000944,
+      "name": "벨라 45 CC - 마스터즈D/마스터즈E",
+      "region": "강원도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000945,
+      "name": "벨라 45 CC - 마스터즈E/마스터즈C",
+      "region": "강원도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000941,
+      "name": "울산 CC - 남/서",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000940,
+      "name": "울산 CC - 동/남",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000942,
+      "name": "울산 CC - 서/동",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000946,
+      "name": "GTOUR 힐",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000935,
+      "name": "어등산 CC - 송정/하남",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000934,
+      "name": "어등산 CC - 어등/송정",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000936,
+      "name": "어등산 CC - 하남/어등",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000937,
+      "name": "에스파크 CC",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000938,
+      "name": "GTOUR 가든",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000929,
+      "name": "모나크 CC",
+      "region": "충청도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000931,
+      "name": "백제 CC - 사비/한성",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000930,
+      "name": "백제 CC - 웅진/사비",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000932,
+      "name": "백제 CC - 한성/웅진",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000933,
+      "name": "아벨 CC (구. 칼레이트)",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000926,
+      "name": "이글릿지 CC - 닉팔도",
+      "region": "필리핀",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000925,
+      "name": "이글릿지 CC - 앤디다이(파인힐스)",
+      "region": "필리핀",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000927,
+      "name": "프라데라 CC",
+      "region": "필리핀",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000920,
+      "name": "디하이츠 - 썬밸리 (클락썬밸리)",
+      "region": "필리핀",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000919,
+      "name": "디하이츠 - 클락 (클락썬밸리)",
+      "region": "필리핀",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000914,
+      "name": "서원힐스 CC - EAST/WEST",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000916,
+      "name": "서원힐스 CC - SOUTH/EAST",
+      "region": "수도권",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000915,
+      "name": "서원힐스 CC - WEST/SOUTH",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000917,
+      "name": "윈체스트 GC",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000921,
+      "name": "클락 코리아 CC - 레이크",
+      "region": "필리핀",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000918,
+      "name": "타이거 CC",
+      "region": "수도권",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000924,
+      "name": "구미 CC -  청룡/거북",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000922,
+      "name": "구미 CC - 거북/백호",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000923,
+      "name": "구미 CC - 백호/청룡",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000906,
+      "name": "골프존카운티 영암45 - 짐앵A/짐앵B",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000907,
+      "name": "골프존카운티 영암45 - 짐앵B/짐앵C",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000908,
+      "name": "골프존카운티 영암45 - 짐앵C/짐앵A",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000912,
+      "name": "세레니티 골프&리조트 - 리버/블루",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000913,
+      "name": "세레니티 골프&리조트 - 블루/실크",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000911,
+      "name": "세레니티 골프&리조트 - 실크/리버",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000909,
+      "name": "써 제임스 CC",
+      "region": "태국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000910,
+      "name": "클락 코리아 CC - 마운틴",
+      "region": "필리핀",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000901,
+      "name": "가야 CC - 가락/신어",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000899,
+      "name": "가야 CC - 김해/수로",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000900,
+      "name": "가야 CC - 낙동/가락",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000903,
+      "name": "한원 CC - 고구려/백제",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000904,
+      "name": "한원 CC - 백제/신라",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000905,
+      "name": "한원 CC - 신라/고구려",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000902,
+      "name": "해운대비치골프앤리조트",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000893,
+      "name": "골프존카운티 드래곤 - 드래곤/스카이",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000891,
+      "name": "골프존카운티 드래곤 - 레이크/드래곤",
+      "region": "전라도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000892,
+      "name": "골프존카운티 드래곤 - 스카이/레이크",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000890,
+      "name": "마스터피스 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000896,
+      "name": "킹즈락 CC - EAST/WEST",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000898,
+      "name": "킹즈락 CC - SOUTH/EAST",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000897,
+      "name": "킹즈락 CC - WEST/SOUTH",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000895,
+      "name": "트럼프 내셔널 GC 베드민스터 - 올드",
+      "region": "미국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000887,
+      "name": "나주 GGC",
+      "region": "가상CC",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000889,
+      "name": "리얼 클럽 발데라마",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000886,
+      "name": "마론 CC",
+      "region": "충청도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000888,
+      "name": "순천 GGC",
+      "region": "가상CC",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000706,
+      "name": "아델스코트 CC - 레이크/마운틴",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000705,
+      "name": "아델스코트 CC - 마운틴/힐",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000707,
+      "name": "아델스코트 CC - 힐/레이크",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102424840,
+      "name": "키아와 아일랜드 - 오션",
+      "region": "미국",
+      "course_difficulty": 3.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 102498560,
+      "name": "후지 클래식",
+      "region": "일본",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000881,
+      "name": "가야 CC - 신어/낙동",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000884,
+      "name": "라온 GC - LAKE/PINE",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000885,
+      "name": "라온 GC - PINE/STONE",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000883,
+      "name": "라온 GC - STONE/LAKE",
+      "region": "제주도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000880,
+      "name": "베이스타즈 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000882,
+      "name": "알파인 GC 방콕",
+      "region": "태국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100006005,
+      "name": "트윈 도브스 골프 클럽",
+      "region": "베트남",
+      "course_difficulty": 4.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000343,
+      "name": "하버 타운 GL",
+      "region": "미국",
+      "course_difficulty": 5.0,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100001095,
+      "name": "광주 무등 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000876,
+      "name": "더 시에나 CC",
+      "region": "제주도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000877,
+      "name": "이지스카이 GC",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000677,
+      "name": "피닉스골프리조트 - 드래곤코스",
+      "region": "베트남",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000873,
+      "name": "대구 CC - 동/중",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000875,
+      "name": "대구 CC - 서/동",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000874,
+      "name": "대구 CC - 중/서",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000872,
+      "name": "부산 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000871,
+      "name": "타미우스 GC - 레이크/마운틴",
+      "region": "제주도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000869,
+      "name": "타미우스 GC - 마운틴/우드",
+      "region": "제주도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000870,
+      "name": "타미우스 GC - 우드/레이크",
+      "region": "제주도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000413,
+      "name": "미션힐스 - 노먼",
+      "region": "중국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000368,
+      "name": "미션힐스 - 블랙스톤",
+      "region": "중국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000375,
+      "name": "미션힐스 - 월드컵",
+      "region": "중국",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000865,
+      "name": "신원 CC - 데이비드/솔로몬",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000866,
+      "name": "신원 CC - 솔로몬/에벤에셀",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000864,
+      "name": "신원 CC - 에벤에셀/데이비드",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000863,
+      "name": "로얄링스 CC - KINGS",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000862,
+      "name": "로얄링스 CC - QUEENS",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000855,
+      "name": "원더클럽 신라 - 남/동",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000856,
+      "name": "원더클럽 신라 - 동/서",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000854,
+      "name": "원더클럽 신라 - 서/남",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000344,
+      "name": "PGA 내셔널 골프클럽 - 챔피언",
+      "region": "미국",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100004004,
+      "name": "PGA 내셔널 골프클럽 - 파머",
+      "region": "미국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000858,
+      "name": "골프존카운티 천안",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000857,
+      "name": "샤인빌파크 CC",
+      "region": "제주도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000860,
+      "name": "에코랜드 GC - 비치힐스/에코",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000861,
+      "name": "에코랜드 GC - 에코/와일드",
+      "region": "제주도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000859,
+      "name": "에코랜드 GC - 와일드/비치힐스",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000695,
+      "name": "골프존카운티 순천 - 다이아몬드/토파즈",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000694,
+      "name": "골프존카운티 순천 - 루비/에메랄드",
+      "region": "전라도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000853,
+      "name": "노벨 CC - 가야/공룡",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000851,
+      "name": "노벨 CC - 공룡/충무",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000852,
+      "name": "노벨 CC - 충무/가야",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000849,
+      "name": "솔라고 CC - 라고",
+      "region": "충청도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000848,
+      "name": "솔라고 CC - 솔",
+      "region": "충청도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100006010,
+      "name": "스토크파크 골프 클럽",
+      "region": "기타",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100005006,
+      "name": "로얄에버딘 골프클럽",
+      "region": "유럽",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000844,
+      "name": "신한투자증권 CC",
+      "region": "가상CC",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100005008,
+      "name": "프린스 골프 클럽",
+      "region": "유럽",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000847,
+      "name": "해솔리아 CC - 리아코스/해코스",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000846,
+      "name": "해솔리아 CC - 솔코스/리아코스",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000845,
+      "name": "해솔리아 CC - 해코스/솔코스",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100005009,
+      "name": "에비앙 리조트 골프코스",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000759,
+      "name": "엠스클럽 의성 - CHALLENGE/CHAMPION",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000757,
+      "name": "엠스클럽 의성 - CHAMPION/MASTER",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000758,
+      "name": "엠스클럽 의성 - MASTER/CHALLENGE",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000840,
+      "name": "자유로 CC - 대한/민국",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000841,
+      "name": "자유로 CC - 민국/통일",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000842,
+      "name": "자유로 CC - 통일/대한",
+      "region": "수도권",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000354,
+      "name": "콕힐 골프클럽 - NO.4",
+      "region": "미국",
+      "course_difficulty": 4.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100005007,
+      "name": "턴베리 골프클럽 - Ailsa",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000834,
+      "name": "보라 CC - EDWARD/HENRY",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000835,
+      "name": "보라 CC - HENRY/WILLIAM",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000836,
+      "name": "보라 CC - WILLIAM/EDWARD",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000829,
+      "name": "의령리온 CC - 길정/리온",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000830,
+      "name": "의령리온 CC - 리온/마운틴",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000831,
+      "name": "의령리온 CC - 마운틴/길정",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000833,
+      "name": "장수골프리조트",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100004009,
+      "name": "퀘일 할로우 클럽(Quail Hollow)",
+      "region": "미국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000837,
+      "name": "핀크스 GC - EAST/WEST",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000839,
+      "name": "핀크스 GC - NORTH/EAST",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000838,
+      "name": "핀크스 GC - WEST/NORTH",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000827,
+      "name": "코스카 CC - 릴리/파인",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000826,
+      "name": "코스카 CC - 메이플/릴리",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000828,
+      "name": "코스카 CC - 파인/메이플",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100006012,
+      "name": "KN GOLF LINKS",
+      "region": "베트남",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000821,
+      "name": "롯데스카이힐 부여CC",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000822,
+      "name": "스프링데일 CC",
+      "region": "제주도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000817,
+      "name": "클럽모우 CC - 마운틴/오아시스",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000818,
+      "name": "클럽모우 CC - 오아시스/와일드",
+      "region": "강원도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000819,
+      "name": "클럽모우 CC - 와일드/마운틴",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000824,
+      "name": "파인리즈 CC - LAKE/RIDGE",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000823,
+      "name": "파인리즈 CC - PINE/LAKE",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000825,
+      "name": "파인리즈 CC - RIDGE/PINE",
+      "region": "강원도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000820,
+      "name": "포웰CC 김해",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000809,
+      "name": "무안클린밸리 CC",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000811,
+      "name": "스카이 밸리 CC - MOUNTAIN/LAKE",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000810,
+      "name": "스카이 밸리 CC - SKY/VALLEY",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000815,
+      "name": "타니 CC - 청룡/백호",
+      "region": "경상도",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000816,
+      "name": "타니 CC - 현무/주작",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100300004,
+      "name": "숏&롱 파3 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000805,
+      "name": "세종에머슨 CC - LAKES/VALLEY",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000807,
+      "name": "세종에머슨 CC - MOUNTAIN/LAKES",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000806,
+      "name": "세종에머슨 CC - VALLEY/MOUNTAIN",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000808,
+      "name": "안동레이크 GC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000804,
+      "name": "푸른솔 GC 장성 - HILL/LAKE",
+      "region": "전라도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000802,
+      "name": "푸른솔 GC 장성 - LAKE/MOUNTAIN",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000803,
+      "name": "푸른솔 GC 장성 - MOUNTAIN/HILL",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000798,
+      "name": "써미트 CC - K코스/M코스",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000796,
+      "name": "써미트 CC - M코스/S코스",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000797,
+      "name": "써미트 CC - S코스/K코스",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000688,
+      "name": "리더스 CC - HILL/LAKE",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000689,
+      "name": "리더스 CC - LAKE/PINE",
+      "region": "경상도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000690,
+      "name": "리더스 CC - PINE/HILL",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000794,
+      "name": "아리지 CC - 달님/별님",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000795,
+      "name": "아리지 CC - 별님/햇님",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000793,
+      "name": "아리지 CC - 햇님/달님",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000792,
+      "name": "양평 TPC GC - LUNAR/STELLA",
+      "region": "수도권",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000790,
+      "name": "양평 TPC GC - SOLAR/LUNAR",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000791,
+      "name": "양평 TPC GC - STELLA/SOLAR",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000782,
+      "name": "골프존카운티 오라 - EAST/WEST",
+      "region": "제주도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000783,
+      "name": "골프존카운티 오라 - SOUTH",
+      "region": "제주도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000784,
+      "name": "인서울 27 CC - EAST/WEST",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000786,
+      "name": "인서울 27 CC - SOUTH/EAST",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000785,
+      "name": "인서울 27 CC - WEST/SOUTH",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000787,
+      "name": "일레븐 CC",
+      "region": "충청도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000788,
+      "name": "GTOUR 밸리",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100300003,
+      "name": "레이크뷰 파3 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000781,
+      "name": "엠버 힐스 골프&리조트",
+      "region": "베트남",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000775,
+      "name": "에버리스 CC - 레이크/새별",
+      "region": "제주도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000776,
+      "name": "에버리스 CC - 새별/파인",
+      "region": "제주도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000777,
+      "name": "에버리스 CC - 파인/레이크",
+      "region": "제주도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000778,
+      "name": "클럽디거창 - EAST/WEST",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000780,
+      "name": "클럽디거창 - SOUTH/EAST",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000779,
+      "name": "클럽디거창 - WEST/SOUTH",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000774,
+      "name": "리베라 CC - 레이크/밸리",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000773,
+      "name": "리베라 CC - 체리힐/파인힐",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000772,
+      "name": "블랙스톤 벨포레 CC",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000771,
+      "name": "샤인데일 CC - 데일/샤인",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000770,
+      "name": "샤인데일 CC - 레이크/데일",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000769,
+      "name": "샤인데일 CC - 샤인/레이크",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000755,
+      "name": "골든 베이 - MOUNTAIN/VALLEY",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000754,
+      "name": "골든 베이 - OCEAN/MOUNTAIN",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000756,
+      "name": "골든 베이 - VALLEY/OCEAN",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000748,
+      "name": "뉴스프링빌 CC - ALPS/MONTBLANC",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000747,
+      "name": "뉴스프링빌 CC - ROCKY/OLYMPUS",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000745,
+      "name": "솔모로 CC - CHERRY/PERSIMMON",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000746,
+      "name": "솔모로 CC - PINE/MAPLE",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000766,
+      "name": "오션힐스 포항 CC - HILL/PINE",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000768,
+      "name": "오션힐스 포항 CC - OCEAN/HILL",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000767,
+      "name": "오션힐스 포항 CC - PINE/OCEAN",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000753,
+      "name": "한림용인 CC - 다이아몬드/사파이어",
+      "region": "수도권",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000752,
+      "name": "한림용인 CC - 루비/다이아몬드",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000751,
+      "name": "한림용인 CC - 사파이어/루비",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000750,
+      "name": "해비치 제주 - LAKE/VALLEY",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000749,
+      "name": "해비치 제주 - SKY/PALM",
+      "region": "제주도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000764,
+      "name": "JNJ - 남/진",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000763,
+      "name": "JNJ - 정/남",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000765,
+      "name": "JNJ - 진/정",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000743,
+      "name": "아리스타 CC",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000742,
+      "name": "플라자 CC 용인 - LION",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000741,
+      "name": "플라자 CC 용인 - TIGER",
+      "region": "수도권",
+      "course_difficulty": 5.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000738,
+      "name": "다산베아채 CC - 다산/베아채",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000739,
+      "name": "다산베아채 CC - 베아채/장보고",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000740,
+      "name": "다산베아채 CC - 장보고/다산",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000735,
+      "name": "베뉴지 CC - G/NEW",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000737,
+      "name": "베뉴지 CC - HILL/G",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000736,
+      "name": "베뉴지 CC - NEW/HILL",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000734,
+      "name": "골드레이크 CC - VALLEY/HILL",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000732,
+      "name": "롯데렌터카 GTOUR",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000730,
+      "name": "라싸 GC - LAKE/VALLEY",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000731,
+      "name": "라싸 GC - VALLEY/MOUNTAIN",
+      "region": "수도권",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100300001,
+      "name": "골프존카운티 파3 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100300002,
+      "name": "GGC 파3 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000725,
+      "name": "통도파인이스트 CC - 북코스",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000726,
+      "name": "포웰CC 안성",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000727,
+      "name": "필로스 CC - EAST/WEST",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000729,
+      "name": "필로스 CC - SOUTH/EAST",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000728,
+      "name": "필로스 CC - WEST/SOUTH",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000722,
+      "name": "속리산 CC",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000723,
+      "name": "클럽디보은",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000717,
+      "name": "GTOUR 마운틴",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000719,
+      "name": "라싸 GC - MOUNTAIN/LAKE",
+      "region": "수도권",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000710,
+      "name": "골프존카운티 진천 - LAKE/MOUNTAIN",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000712,
+      "name": "골프존카운티 진천 - MOUNTAIN/VALLEY",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000711,
+      "name": "골프존카운티 진천 - VALLEY/LAKE",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000703,
+      "name": "센추리 21CC - 밸리/마운틴",
+      "region": "강원도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000704,
+      "name": "센추리 21CC - 필드/마운틴",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000702,
+      "name": "센추리 21CC - 필드/밸리",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000691,
+      "name": "소피아그린 CC - 세종/여강",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000692,
+      "name": "소피아그린 CC - 여강/황학",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000693,
+      "name": "소피아그린 CC - 황학/세종",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000697,
+      "name": "가평 베네스트 GC - BIRCH/MAPLE",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000696,
+      "name": "가평 베네스트 GC - MAPLE/PINE",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000698,
+      "name": "가평 베네스트 GC - PINE/BIRCH",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000715,
+      "name": "골프존카운티 사천 - 다솔/비룡",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000713,
+      "name": "골프존카운티 사천 - 다솔/비토",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000714,
+      "name": "골프존카운티 사천 - 비토/비룡",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000700,
+      "name": "오션비치 CC - BEACH/OCEAN",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000699,
+      "name": "오션비치 CC - OCEAN/VALLEY",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000701,
+      "name": "오션비치 CC - VALLEY/BEACH",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000682,
+      "name": "양산 동원로얄 CC",
+      "region": "경상도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000678,
+      "name": "피닉스골프리조트 - 피닉스코스",
+      "region": "베트남",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000674,
+      "name": "마스터즈클럽 L",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000673,
+      "name": "마스터즈클럽 L PRO",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100006004,
+      "name": "피닉스골프리조트 - 챔피언코스",
+      "region": "베트남",
+      "course_difficulty": 4.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000928,
+      "name": "다이아몬드 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000744,
+      "name": "석정힐 CC",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000667,
+      "name": "마스터즈 클럽 레이크 CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000724,
+      "name": "통도파인이스트 CC - 남코스",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000718,
+      "name": "360도 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000789,
+      "name": "세레니티 강촌 CC",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000675,
+      "name": "세븐밸리컨트리클럽&리조트",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000716,
+      "name": "골프존카운티 경남",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000679,
+      "name": "문경 GC",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000666,
+      "name": "코브스윙 GC",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000664,
+      "name": "마스터즈 클럽 포레스트 CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000611,
+      "name": "마스터즈 제주 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000660,
+      "name": "마스터즈 클럽 밸리 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000631,
+      "name": "의성 GGC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000621,
+      "name": "해남 비치 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 5.0
+    },
+    {
+      "id": 100000661,
+      "name": "홍콩 GC - 유러피언투어",
+      "region": "중국",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000648,
+      "name": "마스터즈 클럽 마운틴 CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000633,
+      "name": "정선 마운틴 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000614,
+      "name": "대관령힐스 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001104,
+      "name": "대관령힐스 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000616,
+      "name": "안산아일랜드 GGC",
+      "region": "가상CC",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000619,
+      "name": "함평 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000627,
+      "name": "북대구 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000622,
+      "name": "블루베이 포항 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000615,
+      "name": "경주 GGC",
+      "region": "가상CC",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000623,
+      "name": "사우스스프링스 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000612,
+      "name": "양산 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000608,
+      "name": "북사천 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000613,
+      "name": "소노펠리체CC 델피노",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000607,
+      "name": "리오 GGC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000603,
+      "name": "여주 캐슬 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000606,
+      "name": "장호원 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000605,
+      "name": "합천 GGC",
+      "region": "가상CC",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000501,
+      "name": "통영 동원로얄 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000600,
+      "name": "진천 밸리 GGC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000478,
+      "name": "골프존카운티 청통",
+      "region": "경상도",
+      "course_difficulty": 1.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000685,
+      "name": "골프존카운티 더골프",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000683,
+      "name": "스톤게이트 CC",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000681,
+      "name": "파라지오 CC",
+      "region": "경상도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000453,
+      "name": "드림 파크 CC",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000436,
+      "name": "골프존카운티 안성H",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000168,
+      "name": "스카이뷰",
+      "region": "경상도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000178,
+      "name": "여수 시티파크",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000430,
+      "name": "디오션 CC",
+      "region": "전라도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000429,
+      "name": "동촌 GC",
+      "region": "충청도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000291,
+      "name": "팔공",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 100000122,
+      "name": "골프존카운티 무주",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000423,
+      "name": "동훈힐마루 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000420,
+      "name": "써닝포인트 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000269,
+      "name": "청우 GC",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000394,
+      "name": "마스터즈 클럽 아일랜드CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000401,
+      "name": "골프존 이벤트 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000162,
+      "name": "구니 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100001017,
+      "name": "노스팜 CC",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000362,
+      "name": "로얄포레",
+      "region": "충청도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000361,
+      "name": "벨라스톤 CC",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000229,
+      "name": "용인 CC",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000299,
+      "name": "한맥 C.C & 노블리아",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000341,
+      "name": "골프존카운티 선운",
+      "region": "전라도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000217,
+      "name": "대호 단양CC",
+      "region": "충청도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000336,
+      "name": "라베 CC",
+      "region": "가상CC",
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000334,
+      "name": "포레스트힐 CC",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000303,
+      "name": "한탄강 CC",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000100,
+      "name": "동원썬밸리 CC",
+      "region": "강원도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000131,
+      "name": "보성",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000242,
+      "name": "이븐데일",
+      "region": "충청도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000328,
+      "name": "이스트힐 CC",
+      "region": "경상도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000251,
+      "name": "자유 CC",
+      "region": "수도권",
+      "course_difficulty": 2.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000133,
+      "name": "부곡 CC",
+      "region": "경상도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000197,
+      "name": "알펜시아 700 GC",
+      "region": "강원도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000025,
+      "name": "고창CC",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000027,
+      "name": "베어크리크 GC-크리크코스",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000216,
+      "name": "오션힐스 청도 GC",
+      "region": "경상도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 100000050,
+      "name": "한림광릉 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000049,
+      "name": "골프클럽 Q",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000333,
+      "name": "골프존카운티 화랑",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000019,
+      "name": "대영 베이스 CC",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000165,
+      "name": "포항CC",
+      "region": "경상도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 100000071,
+      "name": "김포 SEASIDE",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000017,
+      "name": "파크밸리 CC",
+      "region": "강원도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 102097156,
+      "name": "더 시에나 서울 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000293,
+      "name": "포천힐스 CC",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000307,
+      "name": "해비치 서울",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000021,
+      "name": "화순엘리체 CC",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 100000016,
+      "name": "동경가상CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 100000012,
+      "name": "서울가상CC",
+      "region": "가상CC",
+      "course_difficulty": 5.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 100000008,
+      "name": "테디밸리CC",
+      "region": "제주도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000022,
+      "name": "웨스트오션 CC",
+      "region": "전라도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102162689,
+      "name": "아크로 CC",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000006,
+      "name": "볼카노골프앤리조트 CC",
+      "region": "제주도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 100000002,
+      "name": "캐슬렉스 제주 GC",
+      "region": "제주도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102228232,
+      "name": "골프존카운티 안성W",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102301952,
+      "name": "골드레이크 CC - GOLD/LAKE",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102294784,
+      "name": "캐슬파인 GC",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102297856,
+      "name": "상떼힐 익산 CC",
+      "region": "전라도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 102293888,
+      "name": "라헨느 리조트",
+      "region": "제주도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 102293764,
+      "name": "골프존카운티 구미",
+      "region": "경상도",
+      "course_difficulty": 1.0,
+      "green_difficulty": 1.0
+    },
+    {
+      "id": 102367488,
+      "name": "플라자 CC 설악",
+      "region": "강원도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102359424,
+      "name": "골프존카운티 감포",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102361344,
+      "name": "포웰CC  프린세스",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102359304,
+      "name": "남여주 GC",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 102359312,
+      "name": "태인 CC",
+      "region": "전라도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 102359300,
+      "name": "임페리얼레이크 CC",
+      "region": "충청도",
+      "course_difficulty": 3.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000967,
+      "name": "화순 CC - AUTUMN/SPRING",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.5
+    },
+    {
+      "id": 102492416,
+      "name": "무안 CC - 남코스",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 102491392,
+      "name": "무안 CC - 서코스",
+      "region": "전라도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.0
+    },
+    {
+      "id": 102424836,
+      "name": "골프존카운티 이든",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102490370,
+      "name": "골프존카운티 선산",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 102621448,
+      "name": "남촌 CC",
+      "region": "수도권",
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102490496,
+      "name": "롯데스카이힐 성주CC",
+      "region": "경상도",
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102490624,
+      "name": "무안 CC - 동코스",
+      "region": "전라도",
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102623488,
+      "name": "보문 GC",
+      "region": "경상도",
+      "course_difficulty": 3.0,
+      "green_difficulty": 1.5
+    },
+    {
+      "id": 102949121,
+      "name": "서서울 CC",
+      "region": "수도권",
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102556928,
+      "name": "세인트 앤드류스 - 올드 코스",
+      "region": "유럽",
+      "course_difficulty": 3.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 103866625,
+      "name": "센추리 21CC - 파인/레이크",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
+    },
+    {
+      "id": 102621952,
+      "name": "타이시 CC",
+      "region": "일본",
+      "course_difficulty": 1.5,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102621472,
+      "name": "티클라우드CC",
+      "region": "수도권",
+      "course_difficulty": 4.5,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 102818049,
+      "name": "페블비치 GL",
+      "region": "미국",
+      "course_difficulty": 5.0,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 102555905,
+      "name": "하이원 CC",
+      "region": "강원도",
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
+    },
+    {
+      "id": 102637824,
+      "name": "휘닉스 CC",
+      "region": "강원도",
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
+    },
+    {
+      "id": 102572288,
+      "name": "H1 CLUB",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
+    }
+  ]
+}

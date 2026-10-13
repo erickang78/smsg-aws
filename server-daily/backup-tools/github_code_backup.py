@@ -11,7 +11,7 @@ try:
  for directory in ['static','backup-tools']:
   for p in (root/directory).rglob('*'):
    if p.is_file() and p.suffix in ['.py','.html','.css','.js']:files[str(p.relative_to(root))]=p
- for name in ['smsg.service','smsg-code-backup.service','smsg-code-backup.timer','smsg-data-backup.service','smsg-data-backup.timer','smsg-github-backup.service','smsg-github-backup.timer']:files['config/'+name]=Path('/etc/systemd/system')/name
+ for name in ['smsg.service','smsg-code-backup.service','smsg-code-backup.timer','smsg-data-backup.service','smsg-data-backup.timer','smsg-course-catalog-refresh.service','smsg-course-catalog-refresh.timer','smsg-github-backup.service','smsg-github-backup.timer']:files['config/'+name]=Path('/etc/systemd/system')/name
  files['config/nginx-smsg']=Path('/etc/nginx/sites-available/smsg')
  files['common/backup.py']=Path('/opt/kiwoom/backup-tools/backup.py')
  snapshot={}

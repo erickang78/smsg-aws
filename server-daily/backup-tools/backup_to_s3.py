@@ -20,7 +20,7 @@ try:
    files.update({str(p.relative_to(root)):p for p in (root/'static').rglob('*') if p.is_file() and not p.is_symlink()})
    files.update({str(p.relative_to(root)):p for p in (root/'backup-tools').glob('*.py')})
   if kind=='data':
-   for name in ['smsg-code-backup.service','smsg-code-backup.timer','smsg-data-backup.service','smsg-data-backup.timer']:
+   for name in ['smsg-code-backup.service','smsg-code-backup.timer','smsg-data-backup.service','smsg-data-backup.timer','smsg-course-catalog-refresh.service','smsg-course-catalog-refresh.timer']:
     files['config/'+name]=Path('/etc/systemd/system')/name
    files['config/recovery-public.crt']=Path('/opt/kiwoom/backup-tools/recovery-public.crt')
   if kind=='code':files['common/backup.py']=Path('/opt/kiwoom/backup-tools/backup.py')

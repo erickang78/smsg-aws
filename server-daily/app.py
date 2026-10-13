@@ -4,6 +4,11 @@ from http.cookies import SimpleCookie
 ROOT=Path(__file__).parent
 DB=Path(os.environ.get('SMSG_DB',str(ROOT/'data'/'smsg.sqlite3')))
 
+MEAL_NOTE_2='진팀이 이긴팀 밥사주기'
+MEAL_NOTE_5='밥값 1등 5천원, 2등 1만원, 3등 1만5천원, 4등 2만원, 5등 3만원'
+MEAL_NOTE_3='밥값 1등 1만원, 2등 2만원, 3등 3만원'
+MEAL_NOTE_4='밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원'
+
 def connect():
  c=sqlite3.connect(DB,timeout=15);c.row_factory=sqlite3.Row;c.execute('PRAGMA foreign_keys=ON');return c
 
@@ -89,9 +94,14 @@ def application(environ,start_response):
  def send(data,status='200 OK',headers=()):
   payload=json.dumps(data,ensure_ascii=False).encode();start_response(status,[('Content-Type','application/json; charset=utf-8'),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff')]+list(headers));return [payload]
  path=environ.get('PATH_INFO','/');method=environ.get('REQUEST_METHOD','GET')
- if path in ['/','/static/app.js','/static/style.css'] and method=='GET':
-  filename='index.html' if path=='/' else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
-  start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")]);return [(ROOT/'static'/filename).read_bytes()]
+ try:path=path.encode('latin-1').decode('utf-8')
+ except (UnicodeEncodeError,UnicodeDecodeError):pass
+ profile_page=False
+ if method=='GET' and path.count('/')==1 and path not in ['/','/health']:
+  with connect() as c:profile_page=c.execute('SELECT 1 FROM members WHERE name=?',(path[1:],)).fetchone() is not None
+ if (path in ['/','/static/app.js','/static/style.css'] or profile_page) and method=='GET':
+  filename='index.html' if path=='/' or profile_page else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
+  start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://lobby.golfzon.com; img-src 'self' https://i.gzcdn.net; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")]);return [(ROOT/'static'/filename).read_bytes()]
  if path=='/health' and method=='GET':return send({'ok':True})
  if not path.startswith('/api/'):return send({'error':'페이지를 찾을 수 없습니다.'},'404 Not Found')
  try:
@@ -113,6 +123,38 @@ def application(environ,start_response):
      count=a['count']+1 if a and a['reset']>now else 1;c.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?)',(ip,count,now+900 if count==1 else a['reset']));return send({'error':'비밀번호를 확인해주세요.'},'401 Unauthorized')
     c.execute('DELETE FROM attempts WHERE ip=?',(ip,));c.execute('DELETE FROM sessions WHERE expires<?',(now,));token=secrets.token_urlsafe(32);c.execute('INSERT INTO sessions VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),now+86400))
     return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
+   if path=='/api/profile' and method=='GET':
+    from urllib.parse import parse_qs
+    name=parse_qs(environ.get('QUERY_STRING','')).get('name',[''])[0]
+    matches=c.execute('SELECT * FROM members WHERE name=?',(name,)).fetchall()
+    if len(matches)!=1:return send({'error':'회원을 찾을 수 없거나 같은 이름의 회원이 여러 명입니다.'},'404 Not Found')
+    member=dict(matches[0]);id=member['id']
+    games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
+    member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
+    from zoneinfo import ZoneInfo
+    from datetime import datetime
+    today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
+    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,id,today))]
+    return send({'member':member,'games':games,'upcoming':upcoming})
+   if path=='/api/profile-join' and method=='POST':
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    name=str(body.get('name',''));game_id=str(body.get('game_id',''))
+    c.execute('BEGIN IMMEDIATE')
+    members=c.execute('SELECT id,active FROM members WHERE name=?',(name,)).fetchall()
+    if len(members)!=1 or not members[0]['active']:raise ValueError('활동 회원을 확인해주세요.')
+    game=c.execute('SELECT date FROM games WHERE id=?',(game_id,)).fetchone()
+    if not game or game['date']<datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat():raise ValueError('오늘 이후 경기만 참가할 수 있습니다.')
+    member_id=members[0]['id']
+    remove=body.get('remove',False)
+    if type(remove)!=bool:raise ValueError('참석 여부를 확인해주세요.')
+    if remove:
+     if c.execute('SELECT 1 FROM game_results WHERE game_id=? AND member_id=?',(game_id,member_id)).fetchone():raise ValueError('결과 점수가 입력된 경기는 참석을 뺄 수 없습니다.')
+     changed=c.execute('DELETE FROM game_participants WHERE game_id=? AND member_id=?',(game_id,member_id)).rowcount
+    else:changed=c.execute('INSERT OR IGNORE INTO game_participants VALUES(?,?)',(game_id,member_id)).rowcount
+    if changed:c.execute('DELETE FROM game_groupings WHERE game_id=?',(game_id,))
+    return send({'ok':True,'attending':not remove})
+   if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
    if path=='/api/state' and method=='GET':
@@ -120,7 +162,7 @@ def application(environ,start_response):
    if path=='/api/games' and method=='POST':
     from datetime import date
     date.fromisoformat(body['date']);course=str(body.get('course','')).strip();fairway=body.get('fairway');green=body.get('green')
-    if not course or len(course)>120 or any(type(n)!=int or not 0<=n<=5 for n in (fairway,green)):raise ValueError('경기장 이름과 난이도(1~5)를 확인해주세요.')
+    if not course or len(course)>120 or any(type(n) not in (int,float) or not 0<=n<=5 or (n!=0 and n*2!=int(n*2)) for n in (fairway,green)):raise ValueError('경기장 이름과 난이도(1~5, 0.5 단위)를 확인해주세요.')
     note=body.get('note','')
     if not isinstance(note,str) or len(note)>1000:raise ValueError('비고는 1000자 이내로 입력해주세요.')
     id=str(body.get('id') or secrets.token_hex(16))
@@ -166,6 +208,9 @@ def application(environ,start_response):
     members=[dict(r) for r in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,))]
     if not members or len(members)>128 or len(members)!=count*size:raise ValueError(f'참가자는 {len(members)}명입니다. 조 수 × 조당 인원이 참가자 수와 같아야 합니다.')
     groups=fair_game_groups(members,count,size)
+    if count in (2,3,4,5):
+     note=c.execute('SELECT note FROM game_notes WHERE game_id=?',(id,)).fetchone()
+     if not note or note[0] in ('',MEAL_NOTE_2,MEAL_NOTE_3,MEAL_NOTE_4,MEAL_NOTE_5):c.execute('INSERT INTO game_notes VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET note=excluded.note',(id,{2:MEAL_NOTE_2,3:MEAL_NOTE_3,4:MEAL_NOTE_4,5:MEAL_NOTE_5}[count]))
     c.execute('INSERT INTO game_groupings VALUES(?,?,?,?) ON CONFLICT(game_id) DO UPDATE SET groups_json=excluded.groups_json,group_count=excluded.group_count,group_size=excluded.group_size',(id,json.dumps(groups,ensure_ascii=False),count,size));return send({'ok':True,'groups':groups})
    if path=='/api/game-results' and method=='POST':
     id=str(body['id']);member_id=str(body['member_id']);score=body.get('score')
