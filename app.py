@@ -162,7 +162,7 @@ def application(environ,start_response):
    if path=='/api/games' and method=='POST':
     from datetime import date
     date.fromisoformat(body['date']);course=str(body.get('course','')).strip();fairway=body.get('fairway');green=body.get('green')
-    if not course or len(course)>120 or any(type(n)!=int or not 0<=n<=5 for n in (fairway,green)):raise ValueError('경기장 이름과 난이도(1~5)를 확인해주세요.')
+    if not course or len(course)>120 or any(type(n) not in (int,float) or not 0<=n<=5 or (n!=0 and n*2!=int(n*2)) for n in (fairway,green)):raise ValueError('경기장 이름과 난이도(1~5, 0.5 단위)를 확인해주세요.')
     note=body.get('note','')
     if not isinstance(note,str) or len(note)>1000:raise ValueError('비고는 1000자 이내로 입력해주세요.')
     id=str(body.get('id') or secrets.token_hex(16))
