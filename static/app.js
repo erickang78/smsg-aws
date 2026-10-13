@@ -1,5 +1,5 @@
 'use strict';
-let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,coursePage=null,courseQuery='',courseRegion='',courseDifficulty='',greenDifficulty='',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,coursePage=null,courseQuery='',courseRegion='',courseDifficulty='4',greenDifficulty='4',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
@@ -189,7 +189,7 @@ async function setupCourseTabSearch(){
   const render=()=>{
    courseQuery=input.value;courseRegion=regionSelect.value;courseDifficulty=difficultySelect.value;greenDifficulty=greenSelect.value;const query=normalize(input.value),hasFilters=Boolean(courseRegion||courseDifficulty||greenDifficulty);
    if(!query&&!hasFilters){results.innerHTML='<p class="note">코스명을 입력하거나 지역·난이도를 선택해 검색하세요.</p>';detail.innerHTML='';return}
-   const matches=courseCatalog.courses.filter(course=>(!query||normalize(course.name).includes(query))&&(!courseRegion||course.region===courseRegion)&&(!courseDifficulty||Number(course.course_difficulty)===Number(courseDifficulty))&&(!greenDifficulty||Number(course.green_difficulty)===Number(greenDifficulty)));
+   const matches=courseCatalog.courses.filter(course=>(!query||normalize(course.name).includes(query))&&(!courseRegion||course.region===courseRegion)&&(!courseDifficulty||Number(course.course_difficulty)===Number(courseDifficulty))&&(!greenDifficulty||Number(course.green_difficulty)===Number(greenDifficulty))).sort((a,b)=>Number(b.id)-Number(a.id));
    results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · 최대 20개 표시</p>'+matches.slice(0,20).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';
    results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=async()=>{
     const course=courseCatalog.courses.find(item=>String(item.id)===button.dataset.courseTabId);selectedCourse=course;coursePage=null;
