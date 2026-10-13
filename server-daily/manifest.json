@@ -3,19 +3,23 @@
   "files": [
     {
       "path": "app.py",
-      "sha256": "8aad10b55bc2a242fd2e91f00cf9d45918ea2df8d9c676053beca3747c3c7fc2"
+      "sha256": "fc75f0df65396f2493cfe06e38a6badd4eac3c52a313208c5b7a78099686f1fe"
     },
     {
       "path": "backup-tools/backup_to_s3.py",
-      "sha256": "3a0954c54db58a275379961b9815223cd8efc4bcb021fcfe100e3ce6b561a63b"
+      "sha256": "e7d2141d781092989719f5ad0397032ccd4c85f93097ecf58c86d046ec297e17"
     },
     {
       "path": "backup-tools/github_code_backup.py",
-      "sha256": "4b8b63f434ad2b8d4a115f31c86e30940732da48997a14d9b4077c32b5544223"
+      "sha256": "337aac5c49980208f10fae452db34964d37a47f091ce44d5d153c2acc4c2a1c6"
     },
     {
       "path": "backup-tools/publish_status.py",
-      "sha256": "39b6229d54398bc010aa70f9bbeb3c6dd68d0a7d5021d38e1b5f0ccede4d4f11"
+      "sha256": "65d6de362d972fd8db1b4db3bdd5fd617ad94a95bf074d4782c8552371a9804b"
+    },
+    {
+      "path": "backup-tools/update_course_catalog.py",
+      "sha256": "8b993c22042bf325cec437ee8529bd7212e6dc7fc37ebed60188829ac9ada417"
     },
     {
       "path": "common/backup.py",
@@ -32,6 +36,14 @@
     {
       "path": "config/smsg-code-backup.timer",
       "sha256": "a1508a14c013717953e415c38d6a741f064b54bb9076eff3aa8906fc075f853c"
+    },
+    {
+      "path": "config/smsg-course-catalog-refresh.service",
+      "sha256": "5f56b0ba3253f7fedd05facb3c50e88c55ff97ff85c384087b98898b782bfd3d"
+    },
+    {
+      "path": "config/smsg-course-catalog-refresh.timer",
+      "sha256": "5d4ebe09eb43353c56d9b1ec3341fb210dadb9ec197e417d4a4c0fdade68439a"
     },
     {
       "path": "config/smsg-data-backup.service",
@@ -58,6 +70,10 @@
       "sha256": "e1fb4efa6de90e1f325514c98005cb658766d952940c0b4f9c8d994b66b68796"
     },
     {
+      "path": "golfzon-courses.json",
+      "sha256": "83d2575b69b98d4c6dd1293da34845263c6d7b228b228dc5fc950de967e0250c"
+    },
+    {
       "path": "historical-scores.json",
       "sha256": "f33c18c8d323d7d87e428339787b6c83b30a27dbb488df4323a84a653883a983"
     },
@@ -71,15 +87,15 @@
     },
     {
       "path": "static/app.js",
-      "sha256": "3be0f85027593450a0ff7f13cee9ad9d4c67b6fae0ea048b75115e1b168949c2"
+      "sha256": "04553fdbe2000d728ec6a3c3cda52f2be11460e5dd40b2a249f67299a0ef1dd2"
     },
     {
       "path": "static/index.html",
-      "sha256": "44d8f285ac3dfe525a8084106bb161b312d725bc192716c75d729a4d912495aa"
+      "sha256": "04f9c77bab1c4ce2cba4aae7daa6eae33a71f79ffb4f75e436c0516069187fb4"
     },
     {
       "path": "static/style.css",
-      "sha256": "027366c8c30d8d91279653df57d14d3d9356c7f6f9da78cf82d6f8dabc205b66"
+      "sha256": "16d85106a900c11ee92746878b3bf164db43ba202ab4ee5bc5a33512f634da38"
     }
   ]
 }

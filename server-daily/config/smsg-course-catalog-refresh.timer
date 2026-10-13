@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily SMSG Golfzon course catalog refresh (Korea)
+
+[Timer]
+OnCalendar=*-*-* 01:30:00 Asia/Seoul
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
