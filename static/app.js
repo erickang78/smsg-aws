@@ -1,5 +1,5 @@
 'use strict';
-let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,courseQuery='',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,coursePage=null,courseQuery='',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
@@ -150,6 +150,8 @@ function renderCourses(c){
  c.innerHTML=heading('코스 검색','골프존 코스를 찾아 홀별 야디지북과 공략 정보를 확인하세요.')+`<div class="course-browser"><label>골프존 코스 이름<input id="course-tab-search" type="search" autocomplete="off" placeholder="예: 라싸, 수서 골프&리조트" value="${esc(courseQuery)}"></label><div id="course-tab-results" class="course-tab-results" aria-live="polite"></div><div id="course-tab-detail"></div></div>`;
  setupCourseTabSearch();
 }
+const golfzonApi='https://lobby.golfzon.com/v1/dotcom';
+async function golfzonGet(path){const response=await fetch(golfzonApi+path,{headers:{Accept:'application/json'}});if(!response.ok)throw Error('골프존 코스 정보를 불러오지 못했습니다.');return response.json()}
 async function setupCourseTabSearch(){
  const input=$('#course-tab-search'),results=$('#course-tab-results'),detail=$('#course-tab-detail');if(!input||!results||!detail)return;
  results.innerHTML='<p class="note">골프존 코스 목록을 불러오는 중입니다.</p>';
@@ -161,14 +163,40 @@ async function setupCourseTabSearch(){
    if(!query){results.innerHTML='<p class="note">코스명을 입력해 검색하세요.</p>';detail.innerHTML='';return}
    const matches=courseCatalog.courses.filter(course=>normalize(course.name).includes(query));
    results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · 최대 20개 표시</p>'+matches.slice(0,20).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';
-   results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=()=>{
-    selectedCourse=courseCatalog.courses.find(course=>String(course.id)===button.dataset.courseTabId);
-    const url=`https://www.golfzon.com/course/detail/${encodeURIComponent(selectedCourse.id)}`;
-    detail.innerHTML=`<section class="course-selected card"><div><h3>${esc(selectedCourse.name)}</h3><p>${esc(selectedCourse.region)} · 코스 난이도 ${esc(selectedCourse.course_difficulty)} / 5 · 그린 난이도 ${esc(selectedCourse.green_difficulty)} / 5</p></div><a class="course-official-link" href="${url}" target="_blank" rel="noopener noreferrer">골프존에서 열기 ↗</a></section><p class="note">골프존 공식 코스 페이지의 홀별 거리·파·미니맵과 등록된 공략기법을 표시합니다.</p><iframe class="course-detail-frame" src="${url}" title="${esc(selectedCourse.name)} 야디지북 및 코스 공략" loading="lazy"></iframe>`;
+   results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=async()=>{
+    const course=courseCatalog.courses.find(item=>String(item.id)===button.dataset.courseTabId);selectedCourse=course;coursePage=null;
+    const url=`https://www.golfzon.com/course/detail/${encodeURIComponent(course.id)}`;
+    detail.innerHTML=`<section class="course-selected card"><div><h3>${esc(course.name)}</h3><p>${esc(course.region)} · 코스 난이도 ${esc(course.course_difficulty)} / 5 · 그린 난이도 ${esc(course.green_difficulty)} / 5</p></div><a class="course-official-link" href="${url}" target="_blank" rel="noopener noreferrer">골프존에서 열기 ↗</a></section><p class="note">홀별 야디지북을 불러오는 중입니다.</p><div id="course-hole-view" class="course-hole-view"><div class="empty">골프존 코스 정보를 불러오는 중입니다.</div></div><section id="course-strategy" class="course-strategy"></section>`;
+    try{
+     const [courseInfo,yardage]=await Promise.all([golfzonGet(`/courses/course/${course.id}/details`),golfzonGet(`/courses/course/${course.id}/details/hole-info`)]);
+     if(selectedCourse?.id!==course.id||!$('#course-hole-view'))return;
+     coursePage={course,courseInfo,courseTypes:(yardage.courseTypes||[]).slice().sort((a,b)=>a.ciNum-b.ciNum),holeInfoList:yardage.holeInfoList||[],typeIndex:0,holeIndex:0};
+     renderCourseHole();
+    }catch(error){if(selectedCourse?.id===course.id&&$('#course-hole-view'))$('#course-hole-view').innerHTML='<div class="empty">야디지 정보를 가져오지 못했습니다. 골프존에서 열기를 눌러 확인해주세요.</div>'}
    });
   };
-  input.oninput=()=>{selectedCourse=null;detail.innerHTML='';render()};render();
+  input.oninput=()=>{selectedCourse=null;coursePage=null;detail.innerHTML='';render()};render();
  }catch(error){if($('#course-tab-search')===input)results.innerHTML='<p class="note">코스 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>'}
+}
+function renderCourseHole(){
+ if(!coursePage)return;
+ const {course,courseInfo,courseTypes,holeInfoList,typeIndex,holeIndex}=coursePage,container=$('#course-hole-view');if(!container)return;
+ const type=courseTypes[typeIndex],holes=holeInfoList[typeIndex]||[],hole=holes[holeIndex];if(!hole){container.innerHTML='<div class="empty">이 코스의 홀별 야디지 정보가 없습니다.</div>';return}
+ const mapUrl=typeof hole.mapUrl==='string'&&hole.mapUrl.startsWith('/yardage/')?'https://i.gzcdn.net/images/cc'+hole.mapUrl:'';
+ const teeRows=[['Black','backTee','heightBackTee','black'],['Yellow','seniorTee','heightSeniorTee','yellow'],['Blue','champTee','heightChampTee','blue'],['Red','ladyTee','heightLadyTee','red'],['White','frontTee','heightFrontTee','white']].filter(([,distance])=>Number(hole[distance])>0);
+ if(Number(hole.ladySeniorTee)>0)teeRows.push(['Pink','ladySeniorTee','heightLadySeniorTee','pink']);
+ container.innerHTML=`<div class="course-track-tabs">${courseTypes.map((item,index)=>`<button type="button" data-course-type="${index}" class="${index===typeIndex?'active':''}">${esc(item.courseName)}</button>`).join('')}</div><div class="course-hole-title"><div><strong>${hole.holeNo} HOLE</strong><span>PAR ${hole.basicPar}</span></div><span class="course-hole-count">${holeIndex+1} / ${holes.length}</span></div><div class="course-hole-map">${mapUrl?`<img src="${mapUrl}" alt="${esc(course.name)} ${esc(type?.courseName)} ${hole.holeNo}번 홀 야디지북" loading="lazy">`:'<div class="empty">홀 지도를 제공하지 않습니다.</div>'}<button type="button" id="course-prev-hole" aria-label="이전 홀" ${holeIndex===0?'disabled':''}>‹</button><button type="button" id="course-next-hole" aria-label="다음 홀" ${holeIndex>=holes.length-1?'disabled':''}>›</button></div><div class="course-tee-grid">${teeRows.map(([label,distance,height,color])=>`<div class="course-tee-item"><div><span class="tee-dot tee-${color}"></span><b>${label}</b> <strong>${Number(hole[distance])}m</strong></div><small>티 그린 높이 ${Number.isFinite(Number(hole[height]))?Number(hole[height]).toFixed(2):'—'}m</small></div>`).join('')}</div><p class="note">전체 ${courseInfo.holeCount||holes.length*courseTypes.length}홀 · 총 거리 ${courseInfo.totalWidth?Number(courseInfo.totalWidth).toLocaleString('ko-KR')+'m':'—'} · 골프존 공식 야디지 데이터</p>`;
+ container.querySelectorAll('[data-course-type]').forEach(button=>button.onclick=()=>{coursePage.typeIndex=Number(button.dataset.courseType);coursePage.holeIndex=0;renderCourseHole()});
+ $('#course-prev-hole').onclick=()=>{if(coursePage.holeIndex>0){coursePage.holeIndex--;renderCourseHole()}};
+ $('#course-next-hole').onclick=()=>{if(coursePage.holeIndex<holes.length-1){coursePage.holeIndex++;renderCourseHole()}};
+ loadCourseStrategy(course.id,9*typeIndex+Number(hole.holeNo));
+}
+async function loadCourseStrategy(courseId,holeNo){
+ const target=$('#course-strategy');if(!target)return;const requestKey=`${courseId}:${holeNo}`;target.dataset.requestKey=requestKey;target.innerHTML='<h3>코스 공략</h3><p class="note">이 홀의 공략 정보를 확인하는 중입니다.</p>';
+ try{
+  const entries=await golfzonGet(`/courses/${courseId}/strategies/${holeNo}?page=1`);if(!$('#course-strategy')||target.dataset.requestKey!==requestKey||selectedCourse?.id!==courseId)return;
+  target.innerHTML='<h3>코스 공략</h3>'+(entries.length?entries.map(item=>`<article class="course-strategy-card"><div><b>${esc(item.userNickName||'골퍼')}</b><small>${item.createdAt?new Date(item.createdAt*1000).toLocaleDateString('ko-KR'):''}</small></div><p>${esc(item.contents||'').replace(/\r?\n/g,'<br>')}</p></article>`).join(''):'<p class="note">골프존에 등록된 이 홀의 공략기법이 없습니다.</p>');
+ }catch(error){if($('#course-strategy')&&target.dataset.requestKey===requestKey)target.innerHTML='<h3>코스 공략</h3><p class="note">공략 정보를 불러오지 못했습니다.</p>'}
 }
 async function setupCourseSearch(){
  const input=$('#course-search'),results=$('#course-results');if(!input||!results)return;

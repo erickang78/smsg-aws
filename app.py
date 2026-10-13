@@ -101,7 +101,7 @@ def application(environ,start_response):
   with connect() as c:profile_page=c.execute('SELECT 1 FROM members WHERE name=?',(path[1:],)).fetchone() is not None
  if (path in ['/','/static/app.js','/static/style.css'] or profile_page) and method=='GET':
   filename='index.html' if path=='/' or profile_page else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
-  start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'; frame-src https://www.golfzon.com")]);return [(ROOT/'static'/filename).read_bytes()]
+  start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://lobby.golfzon.com; img-src 'self' https://i.gzcdn.net; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")]);return [(ROOT/'static'/filename).read_bytes()]
  if path=='/health' and method=='GET':return send({'ok':True})
  if not path.startswith('/api/'):return send({'error':'페이지를 찾을 수 없습니다.'},'404 Not Found')
  try:
