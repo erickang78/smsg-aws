@@ -2,7 +2,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && useradd --uid 10001 --create-home smsg && mkdir /data && chown smsg:smsg /data
-COPY app.py seed.json ./
+COPY app.py seed.json golfzon-courses.json ./
 COPY static ./static
 ENV SMSG_DB=/data/smsg.sqlite3
 USER smsg
