@@ -1,0 +1,13 @@
+[Unit]
+Description=Refresh SMSG Golfzon course catalog
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/python3 /opt/smsg/backup-tools/update_course_catalog.py --root /opt/smsg
+TimeoutStartSec=300
+Nice=10
+ExecStopPost=/usr/bin/python3 /opt/smsg/backup-tools/publish_status.py

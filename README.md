@@ -43,5 +43,7 @@ docker compose exec smsg python -c 'import sqlite3; s=sqlite3.connect("/data/sms
 
 백업 파일은 볼륨 밖의 별도 보관소에 복사해야 서버 손실에도 복구할 수 있습니다.
 
+운영 서버는 매일 한국 시간 새벽 1시 30분에 골프존 공개 코스 목록을 다시 받아 `golfzon-courses.json`을 원자적으로 갱신합니다. 갱신 전 파일은 `/opt/smsg/backups/course-catalog/`에 30일간 보관하며, 실패 시 기존 목록을 유지합니다. 스케줄 파일은 `ops/systemd/smsg-course-catalog-refresh.{service,timer}`입니다.
+
 ## 로컬 검증
 `python3 test_app.py` 및 `node --check static/app.js`. 로컬 UI는 `python3 app.py`로 127.0.0.1:8091에서 시작합니다. `.env`를 자동 로드하지 않으므로 로컬 실행 시 `SMSG_PASSWORD_HASH` 환경변수를 설정해야 로그인할 수 있습니다. 이 패키지는 브라우저 시각 검증과 실제 AWS 배포 검증을 거치지 않았습니다.
