@@ -1,5 +1,5 @@
 'use strict';
-let state,tab='members',busy=false,selectedGame=null,memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,courseQuery='',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
@@ -12,6 +12,7 @@ function heading(title,sub,button=''){return `<div class="title"><div><h2>${titl
 function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('selected',b.dataset.tab===tab));const c=$('#content');
  if(tab==='members'){c.innerHTML=heading('우리 멤버','이름과 핸디를 등록하고 모임을 함께 관리해요.','<button class="primary" id="newmember">＋ 멤버</button>')+`<div class="filters"><label>정렬 기준<select id="membersort">${[['handicap','핸디 낮은 순'],['name','이름 가나다순'],['age','나이 많은 순'],['recent','최근 참석순']].map(([value,label])=>`<option value="${value}" ${memberSort===value?'selected':''}>${label}</option>`).join('')}</select></label></div>`+(state.members.length?'<div class="cards">'+sortedMembers().map(m=>`<button class="card clickable" data-member="${esc(m.id)}"><h3>${esc(m.name)}</h3><div class="member-details"><div class="member-detail"><span>핸디</span><b>${m.handicap}</b></div><div class="member-detail"><span>참석횟수</span><b>${m.score_count||0}회</b></div><div class="member-detail"><span>${esc(memberNote(m).replace(/생년\s*:\s*(\d{2,4})년/,'생년 $1년생'))}</span></div><div class="member-detail"><span>마지막참석</span><b>${m.last_attended?esc(m.last_attended):'기록 없음'}</b></div></div></button>`).join('')+'</div>':'<div class="empty">아직 등록된 멤버가 없습니다.<br>첫 멤버를 등록해주세요.</div>');$('#membersort').onchange=e=>{memberSort=e.target.value;render()};$('#newmember').onclick=()=>memberEditor();c.querySelectorAll('[data-member]').forEach(b=>b.onclick=()=>memberEditor(state.members.find(m=>m.id===b.dataset.member)))}
  if(tab==='games'){renderGames(c)}
+ if(tab==='courses'){renderCourses(c)}
  if(tab==='meals'){c.innerHTML=heading('식대정산','사진에서 옮긴 43건부터 이어서 기록하세요.','<button class="primary" id="newmeal">＋ 기록</button>')+'<div class="filters"><input id="search" placeholder="장소 검색" aria-label="장소 검색"><select id="month" aria-label="월 선택"><option value="">전체</option>'+[...new Set(state.meals.map(m=>m.date.slice(0,7)))].reverse().map(m=>`<option>${m}</option>`).join('')+'</select></div><div id="meallist" class="cards"></div><p class="note">정산 = 식대 수입 − 지출 · 잔액에는 캐시백·이자 포함<br>이월 잔액 132,843원 · 사진의 빈 지출은 0원으로 입력했습니다.<br>장소명이 다르면 기록을 눌러 수정하세요.</p><button id="csv">↓ CSV 내려받기</button>';$('#newmeal').onclick=()=>mealEditor();$('#search').oninput=mealList;$('#month').onchange=mealList;$('#csv').onclick=exportCSV;mealList()}}
 function mealList(){const rows=state.meals.filter(m=>(!$('#month').value||m.date.startsWith($('#month').value))&&m.place.includes($('#search').value)).slice().reverse();$('#meallist').innerHTML=rows.map(m=>`<button class="card clickable" data-meal="${esc(m.id)}"><div class="row"><span class="muted">${esc(m.date)} · ${m.people}명</span><span class="badge ${m.settlement<0?'negative':''}">${m.settlement>0?'+':''}${money(m.settlement)}원</span></div><h3 class="gap">${esc(m.place)}</h3><div class="stats"><div><small>수입</small><b>${money(m.income)}</b></div><div><small>지출</small><b>${money(m.expense)}</b></div><div><small>잔액</small><b>${money(m.balance)}</b></div></div><div class="note">캐시백·이자 ${money(m.extra)}원</div></button>`).join('')||'<div class="empty">표시할 기록이 없습니다.</div>';document.querySelectorAll('[data-meal]').forEach(b=>b.onclick=()=>mealEditor(state.meals.find(m=>m.id===b.dataset.meal)))}
 $('#close').onclick=()=>{if(!busy)$('#editor').close()};$('#editor').addEventListener('cancel',e=>{if(busy)e.preventDefault()});
@@ -145,6 +146,30 @@ async function joinUpcomingGame(gameId,remove=false){
 function defaultMealNote(count){return {2:'진팀이 이긴팀 밥사주기',3:'밥값 1등 1만원, 2등 2만원, 3등 3만원',4:'밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원',5:'밥값 1등 5천원, 2등 1만원, 3등 1만5천원, 4등 2만원, 5등 3만원'}[count]||'밥값 1등 1만원, 2등 2만원, 3등 3만원'}
 
 let courseCatalog=null;
+function renderCourses(c){
+ c.innerHTML=heading('코스 검색','골프존 코스를 찾아 홀별 야디지북과 공략 정보를 확인하세요.')+`<div class="course-browser"><label>골프존 코스 이름<input id="course-tab-search" type="search" autocomplete="off" placeholder="예: 라싸, 수서 골프&리조트" value="${esc(courseQuery)}"></label><div id="course-tab-results" class="course-tab-results" aria-live="polite"></div><div id="course-tab-detail"></div></div>`;
+ setupCourseTabSearch();
+}
+async function setupCourseTabSearch(){
+ const input=$('#course-tab-search'),results=$('#course-tab-results'),detail=$('#course-tab-detail');if(!input||!results||!detail)return;
+ results.innerHTML='<p class="note">골프존 코스 목록을 불러오는 중입니다.</p>';
+ try{
+  if(!courseCatalog)courseCatalog=await api('courses');if($('#course-tab-search')!==input)return;
+  const normalize=value=>String(value).toLocaleLowerCase().replace(/\s/g,'');
+  const render=()=>{
+   courseQuery=input.value;const query=normalize(input.value);
+   if(!query){results.innerHTML='<p class="note">코스명을 입력해 검색하세요.</p>';detail.innerHTML='';return}
+   const matches=courseCatalog.courses.filter(course=>normalize(course.name).includes(query));
+   results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · 최대 20개 표시</p>'+matches.slice(0,20).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';
+   results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=()=>{
+    selectedCourse=courseCatalog.courses.find(course=>String(course.id)===button.dataset.courseTabId);
+    const url=`https://www.golfzon.com/course/detail/${encodeURIComponent(selectedCourse.id)}`;
+    detail.innerHTML=`<section class="course-selected card"><div><h3>${esc(selectedCourse.name)}</h3><p>${esc(selectedCourse.region)} · 코스 난이도 ${esc(selectedCourse.course_difficulty)} / 5 · 그린 난이도 ${esc(selectedCourse.green_difficulty)} / 5</p></div><a class="course-official-link" href="${url}" target="_blank" rel="noopener noreferrer">골프존에서 열기 ↗</a></section><p class="note">골프존 공식 코스 페이지의 홀별 거리·파·미니맵과 등록된 공략기법을 표시합니다.</p><iframe class="course-detail-frame" src="${url}" title="${esc(selectedCourse.name)} 야디지북 및 코스 공략" loading="lazy"></iframe>`;
+   });
+  };
+  input.oninput=()=>{selectedCourse=null;detail.innerHTML='';render()};render();
+ }catch(error){if($('#course-tab-search')===input)results.innerHTML='<p class="note">코스 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>'}
+}
 async function setupCourseSearch(){
  const input=$('#course-search'),results=$('#course-results');if(!input||!results)return;
  results.innerHTML='<p class="note">골프존 코스 목록을 불러오는 중입니다.</p>';
