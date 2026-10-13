@@ -153,7 +153,7 @@ async function setupCourseSearch(){
  const renderMatches=()=>{const query=normalize(input.value);if(!query){results.innerHTML='<p class="note">이름을 입력해 골프존 코스를 검색하세요. 직접 입력도 가능합니다.</p>';return}
  const matches=courseCatalog.courses.filter(c=>normalize(c.name).includes(query));
  results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · 최대 20개 표시</p>'+matches.slice(0,20).map(c=>`<button type="button" class="course-option" data-course-id="${c.id}"><div class="course-option-details"><b>${esc(c.name)}</b><span>코스 ${esc(c.course_difficulty)} / 5 · 그린 ${esc(c.green_difficulty)} / 5</span></div><small>${esc(c.region)}</small></button>`).join(''):'<p class="note">일치하는 코스가 없습니다. 입력한 이름 그대로 저장할 수 있습니다.</p>';
- results.querySelectorAll('[data-course-id]').forEach(button=>button.onclick=()=>{input.value=courseCatalog.courses.find(c=>String(c.id)===button.dataset.courseId).name;results.innerHTML='<p class="note">선택한 코스: '+esc(input.value)+'</p>'});
+ results.querySelectorAll('[data-course-id]').forEach(button=>button.onclick=()=>{const course=courseCatalog.courses.find(c=>String(c.id)===button.dataset.courseId);input.value=course.name;$('#editform [name="fairway"]').value=String(course.course_difficulty??'');$('#editform [name="green"]').value=String(course.green_difficulty??'');results.innerHTML='<p class="note">선택한 코스: '+esc(input.value)+' · 난이도를 자동 입력했습니다.</p>'});
  };input.oninput=renderMatches;renderMatches();
  }catch(error){if($('#course-search')===input)results.innerHTML='<p class="note">코스 목록을 불러오지 못했습니다. 구장 이름을 직접 입력해주세요.</p>'}
 }
