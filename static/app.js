@@ -186,12 +186,8 @@ async function setupCourseTabSearch(){
   if(!courseCatalog)courseCatalog=await api('courses');if($('#course-tab-search')!==input)return;
   const regions=[...new Set(courseCatalog.courses.map(course=>course.region).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ko'));regionSelect.innerHTML='<option value="">전체 지역</option>'+regions.map(region=>`<option value="${esc(region)}" ${courseRegion===region?'selected':''}>${esc(region)}</option>`).join('');
   const normalize=value=>String(value).toLocaleLowerCase().replace(/\s/g,'');
-  const render=()=>{
-   courseQuery=input.value;courseRegion=regionSelect.value;courseDifficulty=difficultySelect.value;greenDifficulty=greenSelect.value;const query=normalize(input.value),hasFilters=Boolean(courseRegion||courseDifficulty||greenDifficulty);
-   if(!query&&!hasFilters){results.innerHTML='<p class="note">코스명을 입력하거나 지역·난이도를 선택해 검색하세요.</p>';detail.innerHTML='';return}
-   const matches=courseCatalog.courses.filter(course=>(!query||normalize(course.name).includes(query))&&(!courseRegion||course.region===courseRegion)&&(!courseDifficulty||Number(course.course_difficulty)===Number(courseDifficulty))&&(!greenDifficulty||Number(course.green_difficulty)===Number(greenDifficulty))).sort((a,b)=>Number(b.id)-Number(a.id));
-   results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · 최대 20개 표시</p>'+matches.slice(0,20).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';
-   results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=async()=>{
+  let matches=[],visibleCount=20;
+  const paintResults=keepScroll=>{const top=results.scrollTop;results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · '+Math.min(visibleCount,matches.length)+'개 표시'+(visibleCount<matches.length?' · 아래로 스크롤하면 더 표시됩니다':'')+'</p>'+matches.slice(0,visibleCount).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';if(keepScroll)results.scrollTop=top;results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=async()=>{
     const course=courseCatalog.courses.find(item=>String(item.id)===button.dataset.courseTabId);selectedCourse=course;coursePage=null;
     const url=`https://www.golfzon.com/course/detail/${encodeURIComponent(course.id)}`;
     detail.innerHTML=`<section class="course-selected card"><div><h3>${esc(course.name)}</h3><p>${esc(course.region)} · 코스 난이도 ${esc(course.course_difficulty)} / 5 · 그린 난이도 ${esc(course.green_difficulty)} / 5</p></div><a class="course-official-link" href="${url}" target="_blank" rel="noopener noreferrer">골프존에서 열기 ↗</a></section><p class="note">홀별 야디지북을 불러오는 중입니다.</p><div id="course-hole-view" class="course-hole-view"><div class="empty">골프존 코스 정보를 불러오는 중입니다.</div></div><section id="course-strategy" class="course-strategy"></section>`;
@@ -201,7 +197,12 @@ async function setupCourseTabSearch(){
      coursePage={course,courseInfo,courseTypes:(yardage.courseTypes||[]).slice().sort((a,b)=>a.ciNum-b.ciNum),holeInfoList:yardage.holeInfoList||[],typeIndex:0,holeIndex:0};
      renderCourseHole();
     }catch(error){if(selectedCourse?.id===course.id&&$('#course-hole-view'))$('#course-hole-view').innerHTML='<div class="empty">야디지 정보를 가져오지 못했습니다. 골프존에서 열기를 눌러 확인해주세요.</div>'}
-   });
+   });};
+  results.onscroll=()=>{if(visibleCount<matches.length&&results.scrollTop+results.clientHeight>=results.scrollHeight-80){visibleCount=Math.min(visibleCount+20,matches.length);paintResults(true)}};
+  const render=()=>{
+   courseQuery=input.value;courseRegion=regionSelect.value;courseDifficulty=difficultySelect.value;greenDifficulty=greenSelect.value;const query=normalize(input.value),hasFilters=Boolean(courseRegion||courseDifficulty||greenDifficulty);
+   if(!query&&!hasFilters){results.innerHTML='<p class="note">코스명을 입력하거나 지역·난이도를 선택해 검색하세요.</p>';detail.innerHTML='';return}
+   matches=courseCatalog.courses.filter(course=>(!query||normalize(course.name).includes(query))&&(!courseRegion||course.region===courseRegion)&&(!courseDifficulty||Number(course.course_difficulty)===Number(courseDifficulty))&&(!greenDifficulty||Number(course.green_difficulty)===Number(greenDifficulty))).sort((a,b)=>Number(b.id)-Number(a.id));visibleCount=20;paintResults(false);
   };
   input.oninput=()=>{selectedCourse=null;coursePage=null;detail.innerHTML='';render()};regionSelect.onchange=difficultySelect.onchange=greenSelect.onchange=()=>{selectedCourse=null;coursePage=null;detail.innerHTML='';render()};render();
  }catch(error){if($('#course-tab-search')===input)results.innerHTML='<p class="note">코스 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>'}
