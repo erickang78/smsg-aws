@@ -55,3 +55,5 @@
 .game-list-aligned{align-items:center;row-gap:18px}.game-list-aligned h3,.game-list-aligned p{margin:0}.game-list-aligned>.badge,.game-list-aligned>.muted{justify-self:end;text-align:right;white-space:nowrap}.game-list-aligned>.muted{font-size:11px}
 
 .participant-side{gap:18px}
+
+.participant-aligned{align-items:center;row-gap:18px}.participant-aligned .participant-name h3{margin:0}.participant-aligned .participant-handicap{justify-self:end;white-space:nowrap}.participant-aligned .participant-score{grid-column:1}.participant-aligned .participant-delete{grid-column:2;justify-self:end;margin:0}
