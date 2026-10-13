@@ -67,3 +67,4 @@
 .member-attendance-history .attendance-difficulties{white-space:nowrap;color:#71816e;font-size:12px;line-height:1.4}
 .game-course-title{border:0;background:transparent;padding:0;margin:0;color:inherit;font:inherit;font-size:inherit;font-weight:inherit;text-align:left;cursor:pointer}.game-course-title:hover{color:#31593b;text-decoration:underline}#game-course-detail{margin:0 0 18px}
 .profile-history-row{display:block!important}.profile-history-content{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%}.profile-history-content .attendance-date-course{flex:1}.profile-history-content .profile-history-score{white-space:nowrap;color:#355238}.profile-history-content .member-course-detail{flex:0 0 100%;width:100%}
+.profile-history-content .member-course-detail[hidden]{display:none!important}
