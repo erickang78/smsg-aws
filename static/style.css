@@ -49,3 +49,5 @@
 .upcoming-course-row .attendance-actions{flex:0 0 33.333%;justify-content:flex-end}.upcoming-course-row .attendance-actions button{width:100%;font-size:13px;padding:10px 12px}
 
 .participant-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}.participant-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.participant-side .participant-delete{margin:0}.participant-side .badge{white-space:nowrap}
+
+.game-list-card-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}.game-list-card-meta{display:flex;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}.game-list-card-meta .muted{font-size:11px;white-space:nowrap}.game-list-card-meta .badge{white-space:nowrap}
