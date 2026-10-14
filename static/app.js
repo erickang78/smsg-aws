@@ -1,10 +1,11 @@
 'use strict';
 let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,coursePage=null,courseQuery='',courseRegion='',courseDifficulty='4',greenDifficulty='4',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
+const memberDirectoryPage=location.pathname.replace(/\/+$/,'')==='/member';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
 async function api(path,method='GET',body){const r=await fetch('/api/'+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok){if(r.status===401){$('#app').hidden=true;$('#login').hidden=false;$('#logout').hidden=true}throw Error(j.error||'요청을 처리하지 못했습니다.')}return j}
-async function refresh(){if(profileName){await refreshProfile();return}state=await api('state');$('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=false;$('#balance').textContent=money(state.balance)+'원';$('#membercount').textContent=state.members.filter(m=>m.active).length+'명의 멤버';render()}
+async function refresh(){if(memberDirectoryPage){await refreshMemberDirectory();return}if(profileName){await refreshProfile();return}state=await api('state');$('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=false;$('#balance').textContent=money(state.balance)+'원';$('#membercount').textContent=state.members.filter(m=>m.active).length+'명의 멤버';render()}
 $('#loginform').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;try{await api('login','POST',{password:new FormData(e.target).get('password')});e.target.reset();await refresh();status('')}catch(e){status(e.message)}finally{busy=false}};
 $('#logout').onclick=async()=>{try{await api('logout','POST',{});location.reload()}catch(e){status(e.message)}};
 $('nav').onclick=e=>{if(e.target.dataset.tab){tab=e.target.dataset.tab;render()}};
@@ -132,6 +133,13 @@ async function refreshProfile(){
  $('#content').innerHTML=upcomingGamesView(data.upcoming||[])+heading('회원 정보',esc(m.name))+`<section class="card"><h2>${esc(m.name)}</h2><div class="member-details"><div class="member-detail"><span>핸디</span><b>${m.handicap}</b></div><div class="member-detail"><span>참석횟수</span><b>${m.score_count}회</b></div><div class="member-detail"><span>${esc(memberNote(m).replace(/생년\s*:\s*(\d{2,4})년/,'생년 $1년생'))}</span></div><div class="member-detail"><span>마지막참석</span><b>${esc(m.last_attended||'기록 없음')}</b></div></div><section class="member-attendance-history"><h3>참가한 날 · ${data.games.length}회</h3>${data.games.length?'<ul>'+data.games.map((g,i)=>`<li class="profile-history-row"><div class="profile-history-content"><div class="attendance-date-course"><b class="attendance-date">${esc(g.date)}</b><button type="button" class="attendance-course" data-profile-course="${i}" aria-expanded="false">${esc(g.course)}</button></div><span class="profile-history-score">${esc(g.score)}</span><div id="profile-course-detail-${i}" class="member-course-detail" hidden></div></div></li>`).join('')+'</ul>':'<p class="note">아직 참가 기록이 없습니다.</p>'}</section></section>`;
  document.querySelectorAll('[data-profile-course]').forEach(button=>button.onclick=()=>{const detail=$(`#profile-course-detail-${button.dataset.profileCourse}`),isOpen=!detail.hidden&&detail.style.display!=='none';if(isOpen){detail.hidden=true;detail.style.display='none';detail.innerHTML='';button.setAttribute('aria-expanded','false');selectedCourse=null;coursePage=null}else{document.querySelectorAll('.profile-history-row .member-course-detail').forEach(panel=>{panel.hidden=true;panel.style.display='none';panel.innerHTML=''});document.querySelectorAll('[data-profile-course]').forEach(item=>item.setAttribute('aria-expanded','false'));detail.style.display='';detail.hidden=false;button.setAttribute('aria-expanded','true');showMemberCourse(button.textContent,'profile-course-detail-'+button.dataset.profileCourse)}});
  document.querySelectorAll('[data-join-game]').forEach(button=>button.onclick=()=>joinUpcomingGame(button.dataset.joinGame));document.querySelectorAll('[data-leave-game]').forEach(button=>button.onclick=()=>joinUpcomingGame(button.dataset.leaveGame,true));
+}
+
+async function refreshMemberDirectory(){
+ const data=await api('member-directory');
+ $('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=true;$('nav').hidden=true;$('.hero').hidden=true;
+ document.title='회원 명단 · 일조해';
+ $('#content').innerHTML=heading('회원 명단','이름을 누르면 로그인 없이 개인페이지를 볼 수 있습니다.')+(data.members.length?'<div class="cards">'+data.members.map(m=>`<a class="card member-directory-card" href="/${encodeURIComponent(m.name)}"><h3>${esc(m.name)}</h3><span class="note">개인페이지 보기 →</span></a>`).join('')+'</div>':'<div class="empty">등록된 회원이 없습니다.</div>');
 }
 
 function upcomingGamesView(games){

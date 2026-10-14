@@ -97,10 +97,11 @@ def application(environ,start_response):
  try:path=path.encode('latin-1').decode('utf-8')
  except (UnicodeEncodeError,UnicodeDecodeError):pass
  profile_page=False
+ member_directory_page=method=='GET' and path.rstrip('/')=='/member'
  if method=='GET' and path.count('/')==1 and path not in ['/','/health']:
   with connect() as c:profile_page=c.execute('SELECT 1 FROM members WHERE name=?',(path[1:],)).fetchone() is not None
- if (path in ['/','/static/app.js','/static/style.css'] or profile_page) and method=='GET':
-  filename='index.html' if path=='/' or profile_page else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
+ if (path in ['/','/static/app.js','/static/style.css'] or profile_page or member_directory_page) and method=='GET':
+  filename='index.html' if path=='/' or profile_page or member_directory_page else path.split('/')[-1];ctype={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','style.css':'text/css; charset=utf-8'}[filename]
   start_response('200 OK',[('Content-Type',ctype),('Cache-Control','no-store'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://lobby.golfzon.com; img-src 'self' https://i.gzcdn.net; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")]);return [(ROOT/'static'/filename).read_bytes()]
  if path=='/health' and method=='GET':return send({'ok':True})
  if not path.startswith('/api/'):return send({'error':'페이지를 찾을 수 없습니다.'},'404 Not Found')
@@ -136,6 +137,8 @@ def application(environ,start_response):
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
     upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,id,today))]
     return send({'member':member,'games':games,'upcoming':upcoming})
+   if path=='/api/member-directory' and method=='GET':
+    return send({'members':[{'name':r['name']} for r in c.execute('SELECT name FROM members ORDER BY name COLLATE NOCASE,name')]})
    if path=='/api/profile-join' and method=='POST':
     from datetime import datetime
     from zoneinfo import ZoneInfo
