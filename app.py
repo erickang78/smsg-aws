@@ -117,7 +117,8 @@ def application(environ,start_response):
    if path=='/api/login' and method=='POST':
     ip=environ.get('REMOTE_ADDR','unknown');a=c.execute('SELECT * FROM attempts WHERE ip=?',(ip,)).fetchone()
     if a and a['reset']>now and a['count']>=10:return send({'error':'잠시 후 다시 로그인해주세요.'},'429 Too Many Requests')
-    spec=os.environ.get('SMSG_PASSWORD_HASH','')
+    row=c.execute("SELECT value FROM settings WHERE id='password_hash'").fetchone()
+    spec=row['value'] if row else os.environ.get('SMSG_PASSWORD_HASH','')
     if not spec:return send({'error':'서버 관리자가 로그인 비밀번호를 설정해야 합니다.'},'503 Service Unavailable')
     salt,expected_hash=spec.split(':');actual=hashlib.pbkdf2_hmac('sha256',str(body.get('password','')).encode(),bytes.fromhex(salt),600000).hex()
     if not hmac.compare_digest(actual,expected_hash):
@@ -160,6 +161,19 @@ def application(environ,start_response):
    if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
+   if path=='/api/change-password' and method=='POST':
+    current=str(body.get('current_password',''));new=str(body.get('new_password',''))
+    row=c.execute("SELECT value FROM settings WHERE id='password_hash'").fetchone()
+    spec=row['value'] if row else os.environ.get('SMSG_PASSWORD_HASH','')
+    if not spec:return send({'error':'서버 비밀번호 설정을 확인해주세요.'},'503 Service Unavailable')
+    try:salt,expected_hash=spec.split(':');actual=hashlib.pbkdf2_hmac('sha256',current.encode(),bytes.fromhex(salt),600000).hex()
+    except (ValueError,TypeError):return send({'error':'서버 비밀번호 설정을 확인해주세요.'},'503 Service Unavailable')
+    if not hmac.compare_digest(actual,expected_hash):return send({'error':'현재 비밀번호가 맞지 않습니다.'},'400 Bad Request')
+    if len(new)<8 or len(new)>128:return send({'error':'새 비밀번호는 8~128자로 입력해주세요.'},'400 Bad Request')
+    salt=secrets.token_bytes(16);new_hash=salt.hex()+':'+hashlib.pbkdf2_hmac('sha256',new.encode(),salt,600000).hex()
+    c.execute("INSERT INTO settings VALUES('password_hash',?) ON CONFLICT(id) DO UPDATE SET value=excluded.value",(new_hash,))
+    c.execute('DELETE FROM sessions WHERE token<>?',(token_hash,))
+    return send({'ok':True})
    if path=='/api/state' and method=='GET':
     meals,balance=records(c);return send({'members':[dict(r,score_count=score_summary(c,r['id'])['count'],last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]) for r in c.execute('SELECT * FROM members ORDER BY name')],'meals':meals,'rounds':[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')],'games':[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')],'opening':0,'balance':balance})
    if path=='/api/games' and method=='POST':

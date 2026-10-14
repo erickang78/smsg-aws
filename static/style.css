@@ -73,3 +73,4 @@
 .profile-history-content .member-course-detail[hidden]{display:none!important}
 .member-directory-card{display:block;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s}.member-directory-card:hover{border-color:#9bad8b;transform:translateY(-1px)}
 .member-history-row{display:block!important}.member-history-content{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%}.member-history-content .attendance-date-course{flex:1}.member-history-content .member-history-score{white-space:nowrap;color:#355238}.member-history-content .member-course-detail{flex:0 0 100%;width:100%}.member-history-content .member-course-detail[hidden]{display:none!important}
+.header-actions{display:flex;gap:8px;margin-left:auto}.header-actions button{margin-left:0}.header-actions #password-change{font-size:11px}
