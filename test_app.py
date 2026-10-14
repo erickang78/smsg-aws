@@ -9,6 +9,13 @@ class Flow(unittest.TestCase):
   env={'PATH_INFO':path,'REQUEST_METHOD':method,'CONTENT_LENGTH':str(len(payload)),'wsgi.input':io.BytesIO(payload),'wsgi.url_scheme':'https','HTTP_HOST':'smsg.test','HTTP_ORIGIN':origin,'HTTP_COOKIE':cookie,'REMOTE_ADDR':'127.0.0.2'}
   def start(s,h):capture.update(status=s,headers=dict(h))
   data=b''.join(app.application(env,start));return capture,json.loads(data)
+ def test_public_member_directory_route(self):
+  def page(path):
+   capture={};env={'PATH_INFO':path,'REQUEST_METHOD':'GET','CONTENT_LENGTH':'0','wsgi.input':io.BytesIO(),'wsgi.url_scheme':'https','HTTP_HOST':'smsg.test'}
+   def start(status,headers):capture.update(status=status,headers=dict(headers))
+   body=b''.join(app.application(env,start));return capture,body
+  status,body=page('/members');self.assertEqual(status['status'],'200 OK');self.assertIn(b'id="app"',body)
+  status,_=page('/member');self.assertEqual(status['status'],'301 Moved Permanently');self.assertEqual(status['headers']['Location'],'/members')
  def test_full_flow(self):
   self.assertEqual(self.call('/api/state')[0]['status'],'401 Unauthorized')
   self.assertEqual(self.call('/api/change-password','POST',{'current_password':'test password','new_password':'another pass'})[0]['status'],'401 Unauthorized')

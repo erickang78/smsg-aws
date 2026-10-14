@@ -97,7 +97,9 @@ def application(environ,start_response):
  try:path=path.encode('latin-1').decode('utf-8')
  except (UnicodeEncodeError,UnicodeDecodeError):pass
  profile_page=False
- member_directory_page=method=='GET' and path.rstrip('/')=='/member'
+ member_directory_page=method=='GET' and path.rstrip('/')=='/members'
+ if method=='GET' and path.rstrip('/')=='/member':
+  start_response('301 Moved Permanently',[('Location','/members'),('Cache-Control','no-store')]);return [b'']
  if method=='GET' and path.count('/')==1 and path not in ['/','/health']:
   with connect() as c:profile_page=c.execute('SELECT 1 FROM members WHERE name=?',(path[1:],)).fetchone() is not None
  if (path in ['/','/static/app.js','/static/style.css'] or profile_page or member_directory_page) and method=='GET':

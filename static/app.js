@@ -1,7 +1,7 @@
 'use strict';
 let state,tab='members',busy=false,selectedGame=null,selectedCourse=null,coursePage=null,courseQuery='',courseRegion='',courseDifficulty='4',greenDifficulty='4',memberSort='handicap';const $=s=>document.querySelector(s),money=n=>Number(n).toLocaleString('ko-KR'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const profileName=decodeURIComponent(location.pathname).replace(/^\/|\/$/g,'');
-const memberDirectoryPage=location.pathname.replace(/\/+$/,'')==='/member';
+const memberDirectoryPage=location.pathname.replace(/\/+$/,'')==='/members';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function status(s){$('#status').textContent=s}
 async function api(path,method='GET',body){const r=await fetch('/api/'+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok){if(r.status===401){$('#app').hidden=true;$('#login').hidden=false;$('#logout').hidden=true}throw Error(j.error||'요청을 처리하지 못했습니다.')}return j}
@@ -141,7 +141,7 @@ async function refreshMemberDirectory(){
  const data=await api('member-directory');
  $('#login').hidden=true;$('#app').hidden=false;$('#logout').hidden=true;$('#password-change').hidden=true;$('nav').hidden=true;$('.hero').hidden=true;
  document.title='회원 명단 · 일조해';
- $('#content').innerHTML=heading('회원 명단','이름을 누르면 로그인 없이 개인페이지를 볼 수 있습니다.')+(data.members.length?'<div class="cards">'+data.members.map(m=>`<a class="card member-directory-card" href="/${encodeURIComponent(m.name)}"><h3>${esc(m.name)}</h3><span class="note">개인페이지 보기 →</span></a>`).join('')+'</div>':'<div class="empty">등록된 회원이 없습니다.</div>');
+ $('#content').innerHTML=heading('회원 명단','이름을 누르면 로그인 없이 개인페이지로 이동합니다.')+(data.members.length?'<div class="cards member-directory-grid">'+data.members.map(m=>`<a class="card member-directory-card" href="/${encodeURIComponent(m.name)}"><h3>${esc(m.name)}</h3></a>`).join('')+'</div>':'<div class="empty">등록된 회원이 없습니다.</div>');
 }
 
 function upcomingGamesView(games){
