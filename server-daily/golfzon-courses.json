@@ -1,7 +1,35 @@
 {
   "source": "https://www.golfzon.com/course/main",
-  "updated_at": "2026-10-13T16:30:02.310280+00:00",
+  "updated_at": "2026-10-14T16:30:02.226242+00:00",
   "courses": [
+    {
+      "id": 100000389,
+      "name": "만쥬 GC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001088,
+      "name": "신요 CC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000377,
+      "name": "이와테 누마쿠나이 CC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100000381,
+      "name": "카루이자와 코겐 GC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
     {
       "id": 100001091,
       "name": "나라시노 CC - KING",
@@ -209,35 +237,35 @@
       "id": 100001060,
       "name": "로얄 포트러시 GC - 던루스 링크스",
       "region": "기타",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.5,
+      "green_difficulty": 2.5
     },
     {
       "id": 100001059,
       "name": "타이헤이요 클럽 - 고텐바",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.0
     },
     {
       "id": 100001061,
       "name": "프레리 듄스 CC",
       "region": "미국",
       "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "green_difficulty": 2.5
     },
     {
       "id": 100001063,
       "name": "플라밍고 CC - 듄스/리버",
       "region": "충청도",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 1.0,
+      "green_difficulty": 3.5
     },
     {
       "id": 100001062,
       "name": "피닉스 골드 골프&컨트리클럽",
       "region": "태국",
-      "course_difficulty": 4.0,
+      "course_difficulty": 5.0,
       "green_difficulty": 4.0
     },
     {
@@ -1917,8 +1945,8 @@
       "id": 100000818,
       "name": "클럽모우 CC - 오아시스/와일드",
       "region": "강원도",
-      "course_difficulty": 5.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000819,
@@ -2232,8 +2260,8 @@
       "id": 100000779,
       "name": "클럽디거창 - WEST/SOUTH",
       "region": "경상도",
-      "course_difficulty": 4.5,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000774,
@@ -2372,8 +2400,8 @@
       "id": 100000750,
       "name": "해비치 제주 - LAKE/VALLEY",
       "region": "제주도",
-      "course_difficulty": 4.0,
-      "green_difficulty": 3.5
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.0
     },
     {
       "id": 100000749,
@@ -2831,7 +2859,7 @@
       "green_difficulty": 3.5
     },
     {
-      "id": 100000621,
+      "id": 100001102,
       "name": "해남 비치 GGC",
       "region": "가상CC",
       "course_difficulty": 4.5,
@@ -2859,13 +2887,6 @@
       "green_difficulty": 4.5
     },
     {
-      "id": 100000614,
-      "name": "대관령힐스 GGC",
-      "region": "가상CC",
-      "course_difficulty": 4.5,
-      "green_difficulty": 4.0
-    },
-    {
       "id": 100001104,
       "name": "대관령힐스 GGC",
       "region": "가상CC",
@@ -2873,14 +2894,14 @@
       "green_difficulty": 4.0
     },
     {
-      "id": 100000616,
+      "id": 100001105,
       "name": "안산아일랜드 GGC",
       "region": "가상CC",
       "course_difficulty": 3.0,
       "green_difficulty": 4.5
     },
     {
-      "id": 100000619,
+      "id": 100001106,
       "name": "함평 GGC",
       "region": "가상CC",
       "course_difficulty": 4.5,
@@ -2915,7 +2936,7 @@
       "green_difficulty": 4.0
     },
     {
-      "id": 100000612,
+      "id": 100001103,
       "name": "양산 GGC",
       "region": "가상CC",
       "course_difficulty": 4.5,
@@ -3079,8 +3100,8 @@
       "id": 100000269,
       "name": "청우 GC",
       "region": "강원도",
-      "course_difficulty": 4.5,
-      "green_difficulty": 4.5
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
     },
     {
       "id": 100000394,
@@ -3128,8 +3149,8 @@
       "id": 100000229,
       "name": "용인 CC",
       "region": "수도권",
-      "course_difficulty": 4.5,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000299,
@@ -3163,15 +3184,15 @@
       "id": 100000334,
       "name": "포레스트힐 CC",
       "region": "수도권",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000303,
       "name": "한탄강 CC",
       "region": "강원도",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000100,
@@ -3381,7 +3402,7 @@
       "name": "골드레이크 CC - GOLD/LAKE",
       "region": "전라도",
       "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "green_difficulty": 3.5
     },
     {
       "id": 102294784,
@@ -3423,7 +3444,7 @@
       "name": "골프존카운티 감포",
       "region": "경상도",
       "course_difficulty": 3.0,
-      "green_difficulty": 3.5
+      "green_difficulty": 3.0
     },
     {
       "id": 102361344,
@@ -3443,8 +3464,8 @@
       "id": 102359312,
       "name": "태인 CC",
       "region": "전라도",
-      "course_difficulty": 4.5,
-      "green_difficulty": 4.5
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
     },
     {
       "id": 102359300,
