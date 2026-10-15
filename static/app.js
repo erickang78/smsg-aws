@@ -198,16 +198,26 @@ async function setupCourseTabSearch(){
   const normalize=value=>String(value).toLocaleLowerCase().replace(/\s/g,'');
   const normalizeCourse=value=>String(value??'').toLocaleLowerCase().replace(/\((?:베트남|일본|가상|중국|태국)\)/g,'').replace(/ggc|cc|gc/g,'').replace(/[^a-z0-9가-힣]/g,'');
   let previousRecommendationIds=[];
+  let recommendationRun=0,recommendationTimer=null;
+  const cancelRecommendation=()=>{recommendationRun++;if(recommendationTimer)clearTimeout(recommendationTimer);recommendationTimer=null;recommendButton.disabled=false};
   recommendButton.onclick=()=>{
    const played=(state?.games||[]).map(game=>normalizeCourse(game.course)).filter(Boolean),minCourse=Number(difficultySelect.value)||0,minGreen=Number(greenSelect.value)||0;
    const candidates=courseCatalog.courses.filter(course=>{const name=normalizeCourse(course.name),alreadyPlayed=played.some(old=>old===name||old.includes(name)||name.includes(old));return !alreadyPlayed&&(!regionSelect.value||course.region===regionSelect.value)&&Number(course.course_difficulty)>=minCourse&&Number(course.green_difficulty)>=minGreen}).sort((a,b)=>(Number(b.course_difficulty)+Number(b.green_difficulty))-(Number(a.course_difficulty)+Number(a.green_difficulty))||Number(b.id)-Number(a.id));
    if(!candidates.length){recommendations.innerHTML='<div class="empty">선택한 지역과 난이도를 만족하는 미경기 구장이 없습니다.</div>';return}
-   let pool=candidates.filter(course=>!previousRecommendationIds.includes(String(course.id)));if(pool.length<3)pool=candidates.slice();
+   let pool=candidates.filter(course=>!previousRecommendationIds.includes(String(course.id)));if(pool.length<5)pool=candidates.slice();
    for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-   const picks=pool.slice(0,3),selectedId=String(picks[Math.floor(Math.random()*picks.length)].id);previousRecommendationIds=picks.map(course=>String(course.id));
-   recommendations.innerHTML=`<h3>새로운 도전 코스 추천</h3><p class="note">경기 기록에 없는 구장 중 조건에 맞는 코스를 매번 새로 섞어 3개 보여드립니다. 한 곳을 선택해 두었습니다.</p>`+picks.map(course=>{const selected=String(course.id)===selectedId;return `<button type="button" class="course-option recommended-course ${selected?'recommended-selected':''}" data-recommended-course-id="${course.id}" data-region="${esc(course.region)}" aria-pressed="${selected}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} · 그린 ${esc(course.green_difficulty)}</span></div><small>${selected?'선택 추천 · ':''}${esc(course.region)}</small></button>`}).join('');
-   recommendations.querySelectorAll('[data-recommended-course-id]').forEach(button=>button.onclick=()=>{recommendations.querySelectorAll('.recommended-course').forEach(item=>{item.classList.remove('recommended-selected');item.setAttribute('aria-pressed','false');item.querySelector('small').textContent=item.dataset.region});button.classList.add('recommended-selected');button.setAttribute('aria-pressed','true');button.querySelector('small').textContent='선택 추천 · '+button.dataset.region;const course=courseCatalog.courses.find(item=>String(item.id)===button.dataset.recommendedCourseId);input.value=course.name;render();results.querySelector(`[data-course-tab-id="${course.id}"]`)?.click()});
-   recommendations.querySelector(`[data-recommended-course-id="${selectedId}"]`)?.click();
+   const picks=pool.slice(0,5);previousRecommendationIds=picks.map(course=>String(course.id));
+   const finalIndex=Math.floor(Math.random()*picks.length),intervals=[55,65,75,90,110,135,165,200,250,310,390],startIndex=(finalIndex-intervals.length%picks.length+picks.length)%picks.length,run=++recommendationRun;
+   if(recommendationTimer)clearTimeout(recommendationTimer);recommendationTimer=null;
+   recommendations.innerHTML=`<h3>새로운 도전 코스 추천</h3><p class="note">${picks.length}개 코스 중 하나를 2초간 순차 추천합니다.</p>`+picks.map(course=>`<button type="button" class="course-option recommended-course" data-recommended-course-id="${course.id}" data-region="${esc(course.region)}" aria-pressed="false"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} · 그린 ${esc(course.green_difficulty)}</span></div><small>${esc(course.region)}</small></button>`).join('');
+   const buttons=[...recommendations.querySelectorAll('[data-recommended-course-id]')];
+   const activate=(button,final=false)=>{buttons.forEach(item=>{item.classList.remove('recommended-selected','recommended-rolling');item.setAttribute('aria-pressed','false');item.querySelector('small').textContent=item.dataset.region});button.classList.add('recommended-selected');if(!final)button.classList.add('recommended-rolling');button.setAttribute('aria-pressed','true');button.querySelector('small').textContent=(final?'선택 추천 · ':'선택 중 · ')+button.dataset.region};
+   const openCourse=button=>{activate(button,true);const course=courseCatalog.courses.find(item=>String(item.id)===button.dataset.recommendedCourseId);input.value=course.name;render();results.querySelector(`[data-course-tab-id="${course.id}"]`)?.click()};
+   buttons.forEach(button=>button.onclick=()=>{cancelRecommendation();openCourse(button)});
+   recommendButton.disabled=true;
+   let step=0;
+   const tick=()=>{if(run!==recommendationRun)return;const index=(startIndex+step)%buttons.length,button=buttons[index];if(step===intervals.length){recommendButton.disabled=false;openCourse(button);return}activate(button);recommendationTimer=setTimeout(tick,intervals[step]);step++};
+   tick();
   };
   let matches=[],visibleCount=20;
   const paintResults=keepScroll=>{const top=results.scrollTop;results.innerHTML=matches.length?'<p class="note">검색 결과 '+matches.length+'개 · '+Math.min(visibleCount,matches.length)+'개 표시'+(visibleCount<matches.length?' · 아래로 스크롤하면 더 표시됩니다':'')+'</p>'+matches.slice(0,visibleCount).map(course=>`<button type="button" class="course-option" data-course-tab-id="${course.id}"><div class="course-option-details"><b>${esc(course.name)}</b><span>코스 ${esc(course.course_difficulty)} / 5 · 그린 ${esc(course.green_difficulty)} / 5</span></div><small>${esc(course.region)}</small></button>`).join(''):'<p class="note">일치하는 골프존 코스가 없습니다.</p>';if(keepScroll)results.scrollTop=top;results.querySelectorAll('[data-course-tab-id]').forEach(button=>button.onclick=async()=>{
@@ -228,7 +238,7 @@ async function setupCourseTabSearch(){
    if(!query&&!hasFilters){results.innerHTML='<p class="note">코스명을 입력하거나 지역·난이도를 선택해 검색하세요.</p>';detail.innerHTML='';return}
    matches=courseCatalog.courses.filter(course=>(!query||normalize(course.name).includes(query))&&(!courseRegion||course.region===courseRegion)&&(!courseDifficulty||Number(course.course_difficulty)>=Number(courseDifficulty))&&(!greenDifficulty||Number(course.green_difficulty)>=Number(greenDifficulty))).sort((a,b)=>Number(b.id)-Number(a.id));visibleCount=20;paintResults(false);
   };
-  input.oninput=()=>{selectedCourse=null;coursePage=null;detail.innerHTML='';recommendations.innerHTML='';render()};regionSelect.onchange=difficultySelect.onchange=greenSelect.onchange=()=>{selectedCourse=null;coursePage=null;detail.innerHTML='';recommendations.innerHTML='';render()};render();
+  input.oninput=()=>{cancelRecommendation();selectedCourse=null;coursePage=null;detail.innerHTML='';recommendations.innerHTML='';render()};regionSelect.onchange=difficultySelect.onchange=greenSelect.onchange=()=>{cancelRecommendation();selectedCourse=null;coursePage=null;detail.innerHTML='';recommendations.innerHTML='';render()};render();
  }catch(error){if($('#course-tab-search')===input)results.innerHTML='<p class="note">코스 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>'}
 }
 function renderCourseHole(){
