@@ -5,7 +5,9 @@ ROOT=Path(__file__).parent
 DB=Path(os.environ.get('SMSG_DB',str(ROOT/'data'/'smsg.sqlite3')))
 
 MEAL_NOTE_2='진팀이 이긴팀 밥사주기'
-MEAL_NOTE_5='밥값 1등 5천원, 2등 1만원, 3등 1만5천원, 4등 2만원, 5등 3만원'
+MEAL_NOTE_5='밥값\n1등 1만원\n2등 1.5만원\n3등 2만원\n4등 2.5만원\n5등 3만원'
+MEAL_NOTE_5_OLD_DEFAULT='밥값 1등 5천원, 2등 1만원, 3등 1만5천원, 4등 2만원, 5등 3만원'
+MEAL_NOTE_5_OLD_CUSTOM='밥값 \n1등 1만원\n2등 1.5만원\n3등 2.5만원\n4등 3만원'
 MEAL_NOTE_3='밥값 1등 1만원, 2등 2만원, 3등 3만원'
 MEAL_NOTE_4='밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원'
 
@@ -22,12 +24,15 @@ CREATE TABLE IF NOT EXISTS games(id TEXT PRIMARY KEY,date TEXT NOT NULL,course T
 CREATE TABLE IF NOT EXISTS game_participants(game_id TEXT NOT NULL REFERENCES games(id) ON DELETE CASCADE,member_id TEXT NOT NULL REFERENCES members(id),PRIMARY KEY(game_id,member_id));
 CREATE TABLE IF NOT EXISTS historical_scores(member_id TEXT NOT NULL REFERENCES members(id),position INTEGER NOT NULL,score REAL NOT NULL,PRIMARY KEY(member_id,position));
 CREATE TABLE IF NOT EXISTS game_results(game_id TEXT NOT NULL,member_id TEXT NOT NULL,score REAL NOT NULL,PRIMARY KEY(game_id,member_id),FOREIGN KEY(game_id,member_id) REFERENCES game_participants(game_id,member_id) ON DELETE CASCADE);
-CREATE TABLE IF NOT EXISTS members(id TEXT PRIMARY KEY,name TEXT NOT NULL,handicap REAL NOT NULL,note TEXT NOT NULL,active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS members(id TEXT PRIMARY KEY,name TEXT NOT NULL,handicap REAL NOT NULL,note TEXT NOT NULL,active INTEGER NOT NULL DEFAULT 1,phone TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS meals(id TEXT PRIMARY KEY,date TEXT NOT NULL,place TEXT NOT NULL,people INTEGER NOT NULL,income INTEGER NOT NULL,extra INTEGER NOT NULL,expense INTEGER NOT NULL,note TEXT NOT NULL,position INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS rounds(date TEXT PRIMARY KEY,groups_json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS settings(id TEXT PRIMARY KEY,value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,expires INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS member_logins(member_id TEXT PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,username TEXT NOT NULL UNIQUE,salt TEXT NOT NULL,password_hash TEXT NOT NULL,created_at INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS attempts(ip TEXT PRIMARY KEY,count INTEGER NOT NULL,reset INTEGER NOT NULL);''')
+  if 'phone' not in [r['name'] for r in c.execute('PRAGMA table_info(members)')]:
+   c.execute("ALTER TABLE members ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
   c.execute('BEGIN IMMEDIATE')
   if not c.execute("SELECT 1 FROM settings WHERE id='seeded'").fetchone():
    for i,r in enumerate(json.loads((ROOT/'seed.json').read_text())):
@@ -39,28 +44,60 @@ def records(c):
  for r in rows:r['settlement']=r['income']-r['expense'];balance+=r['settlement']+r['extra'];r['balance']=balance
  return rows,balance
 
-def state_data(c):
+def state_data(c,include_private=False):
  meals,balance=records(c)
- members=[dict(r,score_count=score_summary(c,r['id'])['count'],last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]) for r in c.execute('SELECT * FROM members ORDER BY name')]
+ members=[]
+ for row in c.execute('SELECT * FROM members ORDER BY name'):
+  m=dict(row)
+  if not include_private:m.pop('phone',None)
+  summary=recalculate_handicap(c,m['id']);m['handicap']=summary['handicap'];m['handicap_basis']=summary['basis'];m['score_count']=summary['count'];m['last_attended']=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(m['id'],)).fetchone()[0];members.append(m)
  rounds=[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')]
  historical_scores=[dict(r) for r in c.execute('SELECT h.member_id,m.name AS member_name,h.position,h.score FROM historical_scores h JOIN members m ON m.id=h.member_id ORDER BY m.name,h.position')]
  games=[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')]
- return {'members':members,'meals':meals,'rounds':rounds,'historical_scores':historical_scores,'games':games,'opening':0,'balance':balance}
+ period=get_handicap_period(c)
+ return {'members':members,'meals':meals,'rounds':rounds,'historical_scores':historical_scores,'games':games,'opening':0,'balance':balance,'settings':{'handicap_period_months':period}}
+
+def get_handicap_period(c):
+ row=c.execute("SELECT value FROM settings WHERE id='handicap_period_months'").fetchone()
+ try:period=int(row['value']) if row else 3
+ except (TypeError,ValueError):period=3
+ return period if period in (1,2,3,6,12) else 3
 
 def score_summary(c,member_id):
  row=c.execute('SELECT COUNT(*) AS count,COALESCE(SUM(score),0) AS total FROM (SELECT score FROM historical_scores WHERE member_id=? UNION ALL SELECT score FROM game_results WHERE member_id=?)',(member_id,member_id)).fetchone()
  return dict(row)
 
-def recalculate_handicap(c,member_id):
+def recalculate_handicap(c,member_id,as_of=None):
  from decimal import Decimal,ROUND_HALF_UP
- summary=score_summary(c,member_id)
- if summary['count']:
-  hd=float((Decimal(str(summary['total']))/Decimal(summary['count'])).quantize(Decimal('0.1'),rounding=ROUND_HALF_UP))
+ from datetime import date,datetime
+ from zoneinfo import ZoneInfo
+ import calendar
+ today=date.fromisoformat(as_of) if isinstance(as_of,str) else as_of or datetime.now(ZoneInfo('Asia/Seoul')).date()
+ def months_before(months):
+  month=today.month-months;year=today.year+(month-1)//12;month=(month-1)%12+1
+  return today.replace(year=year,month=month,day=min(today.day,calendar.monthrange(year,month)[1])).isoformat()
+ period=get_handicap_period(c)
+ cutoff=months_before(period)
+ rows=c.execute('''SELECT g.date,r.score FROM game_results r JOIN games g ON g.id=r.game_id
+                   WHERE r.member_id=? AND g.date>=? AND g.date<=? ORDER BY g.date''',
+                (member_id,cutoff,today.isoformat())).fetchall()
+ scores=[r['score'] for r in rows]
+ if not scores and period<12:
+  rows=c.execute('''SELECT g.date,r.score FROM game_results r JOIN games g ON g.id=r.game_id
+                    WHERE r.member_id=? AND g.date>=? AND g.date<=? ORDER BY g.date''',
+                 (member_id,months_before(12),today.isoformat())).fetchall()
+  scores=[r['score'] for r in rows]
+ basis=(f'{period}M' if period<12 else '1Y') if scores and (period==12 or any(r['date']>=cutoff for r in rows)) else '1Y' if scores else '초기'
+ if scores:
+  total=sum((Decimal(str(score)) for score in scores),Decimal(0))
+  hd=float((total/Decimal(len(scores))).quantize(Decimal('0.1'),rounding=ROUND_HALF_UP))
   c.execute('UPDATE members SET handicap=? WHERE id=?',(hd,member_id))
  else:
   initial=c.execute("SELECT value FROM settings WHERE id=?",('handicap_initial:'+member_id,)).fetchone()
-  if initial:c.execute('UPDATE members SET handicap=? WHERE id=?',(float(initial[0]),member_id))
- return summary
+  if initial:
+   hd=float(initial[0]);c.execute('UPDATE members SET handicap=? WHERE id=?',(hd,member_id))
+  else:hd=float(c.execute('SELECT handicap FROM members WHERE id=?',(member_id,)).fetchone()[0])
+ return {**score_summary(c,member_id),'handicap':hd,'basis':basis,'window_count':len(scores)}
 
 def fair_game_groups(members,group_count,group_size):
  import random
@@ -125,6 +162,16 @@ def application(environ,start_response):
    if origin!=expected:return send({'error':'허용되지 않은 요청입니다.'},'403 Forbidden')
   with connect() as c:
    cookies=SimpleCookie();cookies.load(environ.get('HTTP_COOKIE',''));token=cookies['smsg_session'].value if 'smsg_session' in cookies else '';token_hash=hashlib.sha256(token.encode()).hexdigest();now=int(time.time())
+   if path=='/api/member-login' and method=='POST':
+    ip=environ.get('REMOTE_ADDR','unknown');a=c.execute('SELECT * FROM attempts WHERE ip=?',(ip,)).fetchone()
+    if a and a['reset']>now and a['count']>=10:return send({'error':'잠시 후 다시 로그인해주세요.'},'429 Too Many Requests')
+    user=c.execute('SELECT * FROM member_logins WHERE username=?',(str(body.get('username','')).strip().lower(),)).fetchone()
+    salt_hex=user['salt'] if user else '00000000000000000000000000000000';expected_hash=user['password_hash'] if user else '0'*64
+    actual=hashlib.pbkdf2_hmac('sha256',str(body.get('password','')).encode(),bytes.fromhex(salt_hex),600000).hex()
+    if not user or not hmac.compare_digest(actual,expected_hash):
+     count=a['count']+1 if a and a['reset']>now else 1;c.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?)',(ip,count,now+900 if count==1 else a['reset']));return send({'error':'회원 ID 또는 비밀번호를 확인해주세요.'},'401 Unauthorized')
+    c.execute('DELETE FROM attempts WHERE ip=?',(ip,));c.execute('DELETE FROM sessions WHERE expires<?',(now,));token=secrets.token_urlsafe(32);c.execute('INSERT INTO sessions VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),now+86400))
+    return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
    if path=='/api/login' and method=='POST':
     ip=environ.get('REMOTE_ADDR','unknown');a=c.execute('SELECT * FROM attempts WHERE ip=?',(ip,)).fetchone()
     if a and a['reset']>now and a['count']>=10:return send({'error':'잠시 후 다시 로그인해주세요.'},'429 Too Many Requests')
@@ -147,16 +194,20 @@ def application(environ,start_response):
     name=parse_qs(environ.get('QUERY_STRING','')).get('name',[''])[0]
     matches=c.execute('SELECT * FROM members WHERE name=?',(name,)).fetchall()
     if len(matches)!=1:return send({'error':'회원을 찾을 수 없거나 같은 이름의 회원이 여러 명입니다.'},'404 Not Found')
-    member=dict(matches[0]);id=member['id']
+    member=dict(matches[0]);member.pop('phone',None);id=member['id']
     games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
-    member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
+    summary=recalculate_handicap(c,id);member.update(handicap=summary['handicap'],handicap_basis=summary['basis'],score_count=summary['count'],last_attended=games[0]['date'] if games else None)
     from zoneinfo import ZoneInfo
     from datetime import datetime
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
     upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,id,today))]
     return send({'member':member,'games':games,'upcoming':upcoming})
    if path=='/api/member-directory' and method=='GET':
-    return send({'members':[{'name':r['name']} for r in c.execute('SELECT name FROM members ORDER BY name COLLATE NOCASE,name')]})
+    members=[]
+    for r in c.execute('SELECT id,name FROM members ORDER BY name COLLATE NOCASE,name').fetchall():
+     summary=recalculate_handicap(c,r['id']);last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]
+     members.append({'name':r['name'],'handicap':summary['handicap'],'handicap_basis':summary['basis'],'score_count':summary['count'],'last_attended':last_attended})
+    return send({'members':members})
    if path=='/api/profile-join' and method=='POST':
     from datetime import datetime
     from zoneinfo import ZoneInfo
@@ -185,6 +236,35 @@ def application(environ,start_response):
     c.execute("DELETE FROM settings WHERE id='share_token_hash'")
     return send({'ok':True})
    if path=='/api/logout' and method=='POST':c.execute('DELETE FROM sessions WHERE token=?',(token_hash,));return send({'ok':True},headers=[('Set-Cookie','smsg_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0')])
+   if path=='/api/settings/backup' and method=='GET':
+    import datetime as dt
+    raw=json.loads(Path('/opt/kiwoom/backup-status/smsg-status.json').read_text())
+    now=dt.datetime.now(dt.timezone.utc); entries={}
+    schedules={'github':'01:15','code':'01:20','data':'01:25','course_catalog':'01:30'}
+    for key,schedule in schedules.items():
+     item=raw.get(key,{}) if isinstance(raw,dict) else {}
+     last=item.get('last_success'); entry={'status':'never','last_success':None,'file_count':None,'course_count':None,'schedule_kst':schedule}
+     if type(item.get('file_count')) is int and item['file_count']>0: entry['file_count']=item['file_count']
+     if type(item.get('course_count')) is int and item['course_count']>0: entry['course_count']=item['course_count']
+     if isinstance(last,str):
+      try:
+       moment=dt.datetime.fromisoformat(last)
+       if moment.tzinfo is not None and moment<=now+dt.timedelta(minutes=5):
+        entry['last_success']=moment.isoformat()
+        entry['status']='failed' if item.get('ok') is False else ('stale' if (now-moment).total_seconds()>=93600 else ('ok' if item.get('ok') is True else 'unavailable'))
+       else: entry['status']='unavailable'
+      except (ValueError,TypeError): entry['status']='unavailable'
+     elif item.get('ok') is False: entry['status']='failed'
+     entries[key]=entry
+    return send({'smsg':entries})
+   if path=='/api/settings' and method=='GET':return send({'handicap_period_months':get_handicap_period(c)})
+   if path=='/api/settings' and method=='POST':
+    period=body.get('handicap_period_months')
+    if type(period) is not int or period not in (1,2,3,6,12):return send({'error':'핸디 계산 기간을 확인해주세요.'},'400 Bad Request')
+    c.execute("INSERT INTO settings VALUES('handicap_period_months',?) ON CONFLICT(id) DO UPDATE SET value=excluded.value",(str(period),))
+    ids=[r[0] for r in c.execute('SELECT id FROM members')]
+    for member_id in ids:recalculate_handicap(c,member_id)
+    return send({'ok':True,'handicap_period_months':period})
    if path=='/api/change-password' and method=='POST':
     current=str(body.get('current_password',''));new=str(body.get('new_password',''))
     row=c.execute("SELECT value FROM settings WHERE id='password_hash'").fetchone()
@@ -199,7 +279,7 @@ def application(environ,start_response):
     c.execute('DELETE FROM sessions WHERE token<>?',(token_hash,))
     return send({'ok':True})
    if path=='/api/state' and method=='GET':
-    return send(state_data(c))
+    return send(state_data(c,include_private=True))
    if path=='/api/games' and method=='POST':
     from datetime import date
     date.fromisoformat(body['date']);course=str(body.get('course','')).strip();fairway=body.get('fairway');green=body.get('green')
@@ -246,12 +326,16 @@ def application(environ,start_response):
     if type(count)!=int or type(size)!=int or not 1<=count<=32 or not 1<=size<=20:raise ValueError('조 수(1~32)와 조당 인원(1~20)을 확인해주세요.')
     c.execute('BEGIN IMMEDIATE')
     if not c.execute('SELECT 1 FROM games WHERE id=?',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
-    members=[dict(r) for r in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,))]
+    members=[]
+    for row in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,)):
+     member=dict(row);summary=recalculate_handicap(c,member['id']);member['handicap']=summary['handicap'];member['handicap_basis']=summary['basis'];members.append(member)
     if not members or len(members)>128 or len(members)!=count*size:raise ValueError(f'참가자는 {len(members)}명입니다. 조 수 × 조당 인원이 참가자 수와 같아야 합니다.')
     groups=fair_game_groups(members,count,size)
     if count in (2,3,4,5):
      note=c.execute('SELECT note FROM game_notes WHERE game_id=?',(id,)).fetchone()
-     if not note or note[0] in ('',MEAL_NOTE_2,MEAL_NOTE_3,MEAL_NOTE_4,MEAL_NOTE_5):c.execute('INSERT INTO game_notes VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET note=excluded.note',(id,{2:MEAL_NOTE_2,3:MEAL_NOTE_3,4:MEAL_NOTE_4,5:MEAL_NOTE_5}[count]))
+     replaceable=('',MEAL_NOTE_2,MEAL_NOTE_3,MEAL_NOTE_4,MEAL_NOTE_5)
+     if count==5:replaceable+=(MEAL_NOTE_5_OLD_DEFAULT,MEAL_NOTE_5_OLD_CUSTOM)
+     if not note or note[0] in replaceable:c.execute('INSERT INTO game_notes VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET note=excluded.note',(id,{2:MEAL_NOTE_2,3:MEAL_NOTE_3,4:MEAL_NOTE_4,5:MEAL_NOTE_5}[count]))
     c.execute('INSERT INTO game_groupings VALUES(?,?,?,?) ON CONFLICT(game_id) DO UPDATE SET groups_json=excluded.groups_json,group_count=excluded.group_count,group_size=excluded.group_size',(id,json.dumps(groups,ensure_ascii=False),count,size));return send({'ok':True,'groups':groups})
    if path=='/api/game-results' and method=='POST':
     id=str(body['id']);member_id=str(body['member_id']);score=body.get('score')
@@ -267,7 +351,17 @@ def application(environ,start_response):
    if path=='/api/members' and method=='POST':
     name=str(body.get('name','')).strip();hd=float(body.get('handicap',0));note=str(body.get('note',''))[:1000]
     if not name or len(name)>80 or not math.isfinite(hd) or not -100<=hd<=300:raise ValueError('이름과 핸디(-100~300)를 확인해주세요.')
-    id=str(body.get('id') or secrets.token_hex(16));c.execute('INSERT INTO members VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,handicap=excluded.handicap,note=excluded.note,active=excluded.active',(id,name,hd,note,1 if body.get('active',True) else 0));recalculate_handicap(c,id);return send({'ok':True})
+    id=str(body.get('id') or secrets.token_hex(16));raw_phone=body.get('phone')
+    if raw_phone is None:
+     existing=c.execute('SELECT phone FROM members WHERE id=?',(id,)).fetchone();phone=existing['phone'] if existing else ''
+    else:
+     raw_phone=str(raw_phone).strip()
+     digits=re.sub(r'\D','',raw_phone)
+     if digits.startswith('82'):digits=digits[2:]
+     if digits.startswith('10'):digits='0'+digits
+     if digits and (len(digits)!=11 or not digits.startswith('010')):raise ValueError('연락처는 010-1234-5678 형식으로 입력해주세요.')
+     phone=f'{digits[:3]}-{digits[3:7]}-{digits[7:]}' if digits else ''
+    c.execute('INSERT INTO members(id,name,handicap,note,active,phone) VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,handicap=excluded.handicap,note=excluded.note,active=excluded.active,phone=excluded.phone',(id,name,hd,note,1 if body.get('active',True) else 0,phone));recalculate_handicap(c,id);return send({'ok':True})
    if path=='/api/meals' and method=='POST':
     from datetime import date
     date.fromisoformat(body['date']);place=str(body['place']).strip()
@@ -280,8 +374,12 @@ def application(environ,start_response):
     from datetime import date
     date.fromisoformat(body['date']);size=int(body.get('size',4));ids=body['ids']
     if size not in [2,3,4] or not isinstance(ids,list) or not ids or len(ids)!=len(set(ids)):raise ValueError('참가자와 조 인원을 확인해주세요.')
-    members=[dict(c.execute('SELECT * FROM members WHERE id=? AND active=1',(id,)).fetchone() or {}) for id in ids]
-    if any(not m for m in members):raise ValueError('등록된 활동 멤버만 선택할 수 있습니다.')
+    members=[]
+    for id in ids:
+     row=c.execute('SELECT * FROM members WHERE id=? AND active=1',(id,)).fetchone()
+     if row:
+      member=dict(row);member.pop('phone',None);summary=recalculate_handicap(c,id);member['handicap']=summary['handicap'];member['handicap_basis']=summary['basis'];members.append(member)
+    if len(members)!=len(ids):raise ValueError('등록된 활동 멤버만 선택할 수 있습니다.')
     groups=balanced_groups(members,size);c.execute('INSERT OR REPLACE INTO rounds VALUES(?,?)',(body['date'],json.dumps(groups,ensure_ascii=False)));return send({'ok':True,'groups':groups})
    return send({'error':'지원하지 않는 요청입니다.'},'404 Not Found')
  except (ValueError,KeyError,TypeError) as e:return send({'error':str(e) or '입력을 확인해주세요.'},'400 Bad Request')
