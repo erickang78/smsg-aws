@@ -77,3 +77,4 @@
 .header-actions{display:flex;gap:8px;margin-left:auto}.header-actions button{margin-left:0}.header-actions #password-change{font-size:11px}
 .member-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.member-directory-grid .member-directory-card{padding:14px 8px;text-align:center}.member-directory-grid h3{margin:0;font-size:16px;line-height:1.4;overflow-wrap:anywhere}
 @media(max-width:600px){.member-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.member-directory-grid .member-directory-card{padding:12px 5px}.member-directory-grid h3{font-size:14px}}
+.handicap-basis{display:inline-block;margin-left:4px;color:#87947f;font-size:9px;font-weight:500;vertical-align:baseline}

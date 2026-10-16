@@ -41,7 +41,9 @@ def records(c):
 
 def state_data(c):
  meals,balance=records(c)
- members=[dict(r,score_count=score_summary(c,r['id'])['count'],last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]) for r in c.execute('SELECT * FROM members ORDER BY name')]
+ members=[]
+ for row in c.execute('SELECT * FROM members ORDER BY name'):
+  m=dict(row);summary=recalculate_handicap(c,m['id']);m['handicap']=summary['handicap'];m['handicap_basis']=summary['basis'];m['score_count']=summary['count'];m['last_attended']=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(m['id'],)).fetchone()[0];members.append(m)
  rounds=[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')]
  historical_scores=[dict(r) for r in c.execute('SELECT h.member_id,m.name AS member_name,h.position,h.score FROM historical_scores h JOIN members m ON m.id=h.member_id ORDER BY m.name,h.position')]
  games=[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')]
@@ -51,16 +53,32 @@ def score_summary(c,member_id):
  row=c.execute('SELECT COUNT(*) AS count,COALESCE(SUM(score),0) AS total FROM (SELECT score FROM historical_scores WHERE member_id=? UNION ALL SELECT score FROM game_results WHERE member_id=?)',(member_id,member_id)).fetchone()
  return dict(row)
 
-def recalculate_handicap(c,member_id):
+def recalculate_handicap(c,member_id,as_of=None):
  from decimal import Decimal,ROUND_HALF_UP
- summary=score_summary(c,member_id)
- if summary['count']:
-  hd=float((Decimal(str(summary['total']))/Decimal(summary['count'])).quantize(Decimal('0.1'),rounding=ROUND_HALF_UP))
+ from datetime import date,datetime
+ from zoneinfo import ZoneInfo
+ import calendar
+ today=date.fromisoformat(as_of) if isinstance(as_of,str) else as_of or datetime.now(ZoneInfo('Asia/Seoul')).date()
+ def months_before(months):
+  month=today.month-months;year=today.year+(month-1)//12;month=(month-1)%12+1
+  return today.replace(year=year,month=month,day=min(today.day,calendar.monthrange(year,month)[1])).isoformat()
+ cutoff_3m,cutoff_1y=months_before(3),months_before(12)
+ rows=c.execute('''SELECT g.date,r.score FROM game_results r JOIN games g ON g.id=r.game_id
+                   WHERE r.member_id=? AND g.date>=? AND g.date<=? ORDER BY g.date''',
+                (member_id,cutoff_1y,today.isoformat())).fetchall()
+ recent=[r['score'] for r in rows if r['date']>=cutoff_3m]
+ scores=recent or [r['score'] for r in rows]
+ basis='3M' if recent else '1Y' if scores else '초기'
+ if scores:
+  total=sum((Decimal(str(score)) for score in scores),Decimal(0))
+  hd=float((total/Decimal(len(scores))).quantize(Decimal('0.1'),rounding=ROUND_HALF_UP))
   c.execute('UPDATE members SET handicap=? WHERE id=?',(hd,member_id))
  else:
   initial=c.execute("SELECT value FROM settings WHERE id=?",('handicap_initial:'+member_id,)).fetchone()
-  if initial:c.execute('UPDATE members SET handicap=? WHERE id=?',(float(initial[0]),member_id))
- return summary
+  if initial:
+   hd=float(initial[0]);c.execute('UPDATE members SET handicap=? WHERE id=?',(hd,member_id))
+  else:hd=float(c.execute('SELECT handicap FROM members WHERE id=?',(member_id,)).fetchone()[0])
+ return {**score_summary(c,member_id),'handicap':hd,'basis':basis,'window_count':len(scores)}
 
 def fair_game_groups(members,group_count,group_size):
  import random
@@ -149,7 +167,7 @@ def application(environ,start_response):
     if len(matches)!=1:return send({'error':'회원을 찾을 수 없거나 같은 이름의 회원이 여러 명입니다.'},'404 Not Found')
     member=dict(matches[0]);id=member['id']
     games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
-    member.update(score_count=score_summary(c,id)['count'],last_attended=games[0]['date'] if games else None)
+    summary=recalculate_handicap(c,id);member.update(handicap=summary['handicap'],handicap_basis=summary['basis'],score_count=summary['count'],last_attended=games[0]['date'] if games else None)
     from zoneinfo import ZoneInfo
     from datetime import datetime
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
@@ -246,7 +264,9 @@ def application(environ,start_response):
     if type(count)!=int or type(size)!=int or not 1<=count<=32 or not 1<=size<=20:raise ValueError('조 수(1~32)와 조당 인원(1~20)을 확인해주세요.')
     c.execute('BEGIN IMMEDIATE')
     if not c.execute('SELECT 1 FROM games WHERE id=?',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
-    members=[dict(r) for r in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,))]
+    members=[]
+    for row in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,)):
+     member=dict(row);summary=recalculate_handicap(c,member['id']);member['handicap']=summary['handicap'];member['handicap_basis']=summary['basis'];members.append(member)
     if not members or len(members)>128 or len(members)!=count*size:raise ValueError(f'참가자는 {len(members)}명입니다. 조 수 × 조당 인원이 참가자 수와 같아야 합니다.')
     groups=fair_game_groups(members,count,size)
     if count in (2,3,4,5):
@@ -280,8 +300,12 @@ def application(environ,start_response):
     from datetime import date
     date.fromisoformat(body['date']);size=int(body.get('size',4));ids=body['ids']
     if size not in [2,3,4] or not isinstance(ids,list) or not ids or len(ids)!=len(set(ids)):raise ValueError('참가자와 조 인원을 확인해주세요.')
-    members=[dict(c.execute('SELECT * FROM members WHERE id=? AND active=1',(id,)).fetchone() or {}) for id in ids]
-    if any(not m for m in members):raise ValueError('등록된 활동 멤버만 선택할 수 있습니다.')
+    members=[]
+    for id in ids:
+     row=c.execute('SELECT * FROM members WHERE id=? AND active=1',(id,)).fetchone()
+     if row:
+      member=dict(row);summary=recalculate_handicap(c,id);member['handicap']=summary['handicap'];member['handicap_basis']=summary['basis'];members.append(member)
+    if len(members)!=len(ids):raise ValueError('등록된 활동 멤버만 선택할 수 있습니다.')
     groups=balanced_groups(members,size);c.execute('INSERT OR REPLACE INTO rounds VALUES(?,?)',(body['date'],json.dumps(groups,ensure_ascii=False)));return send({'ok':True,'groups':groups})
    return send({'error':'지원하지 않는 요청입니다.'},'404 Not Found')
  except (ValueError,KeyError,TypeError) as e:return send({'error':str(e) or '입력을 확인해주세요.'},'400 Bad Request')

@@ -1,5 +1,7 @@
 from test_app import Flow
 import app,unittest
+from datetime import datetime
+from zoneinfo import ZoneInfo
 class Results(Flow):
  def test_average_update_and_removal(self):
   response,_=self.call('/api/login','POST',{'password':'test password'});cookie=response['headers']['Set-Cookie'].split(';')[0]
@@ -7,13 +9,13 @@ class Results(Flow):
   with app.connect() as c:
    for i,n in enumerate([8,3,1,7,0,21,2,-1,-6,8,2,18]):c.execute('INSERT INTO historical_scores VALUES(?,?,?)',('scorer',i,n))
    app.recalculate_handicap(c,'scorer')
-  game={'date':'2026-10-11','course':'결과테스트','fairway':4,'green':4}
+  game={'date':datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat(),'course':'결과테스트','fairway':4,'green':4}
   id=self.call('/api/games','POST',game,cookie)[1]['id']
   self.call('/api/game-participants','POST',{'id':id,'ids':['scorer']},cookie)
   def score(n):return self.call('/api/game-results','POST',{'id':id,'member_id':'scorer','score':n},cookie)
-  self.assertEqual(score(0)[1]['handicap'],4.8)
-  member=next(m for m in self.call('/api/state',cookie=cookie)[1]['members'] if m['id']=='scorer');self.assertEqual(member['last_attended'],'2026-10-11')
-  self.assertEqual(score(-2)[1]['handicap'],4.7)
+  self.assertEqual(score(0)[1]['handicap'],0.0)
+  member=next(m for m in self.call('/api/state',cookie=cookie)[1]['members'] if m['id']=='scorer');self.assertEqual(member['last_attended'],game['date'])
+  self.assertEqual(score(-2)[1]['handicap'],-2.0)
   self.assertEqual(score(-2)[1]['score_count'],13)
   self.assertEqual(score(True)[0]['status'],'400 Bad Request')
   self.assertEqual(score(301)[0]['status'],'400 Bad Request')
