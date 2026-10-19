@@ -14,7 +14,7 @@ $('#share-create').onclick=async()=>{if(!confirm('회원 이름·핸디·메모�
 $('#share-copy').onclick=async()=>{try{await navigator.clipboard.writeText($('#share-url').value);$('#share-status').textContent='공유 주소를 복사했습니다.'}catch(error){$('#share-url').focus();$('#share-url').select();$('#share-status').textContent='주소를 선택했습니다. 복사해 공유하세요.'}};
 $('#share-revoke').onclick=async()=>{if(!confirm('기존 공유 링크를 폐기할까요? 링크를 가진 사람은 더 이상 장부를 볼 수 없습니다.'))return;$('#share-revoke').disabled=true;try{await api('share-link','DELETE',{});$('#share-link-result').hidden=true;$('#share-url').value='';$('#share-status').textContent='공유 링크를 폐기했습니다.'}catch(error){$('#share-status').textContent=error.message}finally{$('#share-revoke').disabled=false}};
 $('#logout').onclick=async()=>{try{await api('logout','POST',{});location.reload()}catch(e){status(e.message)}};
-$('nav').onclick=e=>{if(e.target.dataset.tab){tab=e.target.dataset.tab;render()}};
+$('nav').onclick=e=>{if(e.target.dataset.tab){status('');tab=e.target.dataset.tab;render()}};
 function heading(title,sub,button=''){return `<div class="title"><div><h2>${title}</h2><p>${sub}</p></div>${button}</div>`}
 function handicapPeriodLabel(){const period=Number(state?.settings?.handicap_period_months||3);return period===12?'1년':`${period}개월`}
 function handicapPeriodText(){const period=Number(state?.settings?.handicap_period_months||3),label=handicapPeriodLabel();return `최근 ${label} 점수 평균을 적용합니다.`+(period<12?` 최근 ${label} 참석 결과가 없으면 최근 1년 평균을 적용합니다.`:'')}
