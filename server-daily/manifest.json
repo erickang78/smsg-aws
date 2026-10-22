@@ -2,8 +2,12 @@
   "project": "smsg",
   "files": [
     {
+      "path": "ai_assistant.py",
+      "sha256": "f587b9967179171e1555a58bd06f8a046a55106a7d4acf5f2c54461ed220ed08"
+    },
+    {
       "path": "app.py",
-      "sha256": "64c796bcafbbb45081aa76e2d748dc1b982446cb8f41abd68e387190ea0b1dad"
+      "sha256": "40a558f49c8b724f7e63d15abd440c966ab666c2298988d8a3cf512984c44a5d"
     },
     {
       "path": "backup-tools/backup_to_s3.py",
@@ -71,7 +75,7 @@
     },
     {
       "path": "golfzon-courses.json",
-      "sha256": "40915b67a27be420236f501efe1a6d6f38f010d707bfa9c41274cf7d30a0defd"
+      "sha256": "bdd25da376a98c1c9c060ea2634ba368a561519b834728896d405afcaa0d0aaa"
     },
     {
       "path": "historical-scores.json",
@@ -87,11 +91,11 @@
     },
     {
       "path": "static/app.js",
-      "sha256": "f10e925faba38ac9570083d95d7ec00f1493d8e7fbee5c09e231c24d3ea29aeb"
+      "sha256": "d7ef5b05507f24fb0c94ac14df086a8f8f945b8a3ff654bc2ef2a8c7b605c0f9"
     },
     {
       "path": "static/index.html",
-      "sha256": "7f9e20f8fceaaad4e0cd6a5ef2726d76ab9453467be0be0e4b7a27500f943894"
+      "sha256": "3e6a2da268978e129e69d83c014619368f2e5072a63ce5529e96a8f3aea57c75"
     },
     {
       "path": "static/share.css",
@@ -107,7 +111,7 @@
     },
     {
       "path": "static/style.css",
-      "sha256": "21c5bbe5babe097c7cb98266c074ed6e57c22ed7a237600777a419aed2ccefe3"
+      "sha256": "e36d313b4dc6124e0c9d1b590a92c1300c9644f8793cd6a576c4fbc4b6f94af2"
     }
   ]
 }

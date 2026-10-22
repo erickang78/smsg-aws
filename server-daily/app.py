@@ -20,7 +20,8 @@ def init():
   c.executescript('''PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS game_groupings(game_id TEXT PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,groups_json TEXT NOT NULL,group_count INTEGER NOT NULL,group_size INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS game_notes(game_id TEXT PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,note TEXT NOT NULL);
-CREATE TABLE IF NOT EXISTS games(id TEXT PRIMARY KEY,date TEXT NOT NULL,course TEXT NOT NULL,fairway INTEGER NOT NULL,green INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS games(id TEXT PRIMARY KEY,date TEXT NOT NULL,course TEXT NOT NULL,fairway INTEGER NOT NULL,green INTEGER NOT NULL,deleted_at INTEGER);
+CREATE TABLE IF NOT EXISTS game_change_log(id INTEGER PRIMARY KEY AUTOINCREMENT,game_id TEXT NOT NULL,action TEXT NOT NULL,game_date TEXT NOT NULL,course TEXT NOT NULL,changed_at INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS game_participants(game_id TEXT NOT NULL REFERENCES games(id) ON DELETE CASCADE,member_id TEXT NOT NULL REFERENCES members(id),PRIMARY KEY(game_id,member_id));
 CREATE TABLE IF NOT EXISTS historical_scores(member_id TEXT NOT NULL REFERENCES members(id),position INTEGER NOT NULL,score REAL NOT NULL,PRIMARY KEY(member_id,position));
 CREATE TABLE IF NOT EXISTS game_results(game_id TEXT NOT NULL,member_id TEXT NOT NULL,score REAL NOT NULL,PRIMARY KEY(game_id,member_id),FOREIGN KEY(game_id,member_id) REFERENCES game_participants(game_id,member_id) ON DELETE CASCADE);
@@ -33,6 +34,8 @@ CREATE TABLE IF NOT EXISTS member_logins(member_id TEXT PRIMARY KEY REFERENCES m
 CREATE TABLE IF NOT EXISTS attempts(ip TEXT PRIMARY KEY,count INTEGER NOT NULL,reset INTEGER NOT NULL);''')
   if 'phone' not in [r['name'] for r in c.execute('PRAGMA table_info(members)')]:
    c.execute("ALTER TABLE members ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
+  if 'deleted_at' not in [r['name'] for r in c.execute('PRAGMA table_info(games)')]:
+   c.execute('ALTER TABLE games ADD COLUMN deleted_at INTEGER')
   c.execute('BEGIN IMMEDIATE')
   if not c.execute("SELECT 1 FROM settings WHERE id='seeded'").fetchone():
    for i,r in enumerate(json.loads((ROOT/'seed.json').read_text())):
@@ -50,10 +53,10 @@ def state_data(c,include_private=False):
  for row in c.execute('SELECT * FROM members ORDER BY name'):
   m=dict(row)
   if not include_private:m.pop('phone',None)
-  summary=recalculate_handicap(c,m['id']);m['handicap']=summary['handicap'];m['handicap_basis']=summary['basis'];m['score_count']=summary['count'];m['last_attended']=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(m['id'],)).fetchone()[0];members.append(m)
+  summary=recalculate_handicap(c,m['id']);m['handicap']=summary['handicap'];m['handicap_basis']=summary['basis'];m['score_count']=summary['count'];m['last_attended']=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=? AND g.deleted_at IS NULL',(m['id'],)).fetchone()[0];members.append(m)
  rounds=[dict(r) for r in c.execute('SELECT * FROM rounds ORDER BY date DESC')]
  historical_scores=[dict(r) for r in c.execute('SELECT h.member_id,m.name AS member_name,h.position,h.score FROM historical_scores h JOIN members m ON m.id=h.member_id ORDER BY m.name,h.position')]
- games=[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games ORDER BY date DESC,rowid DESC')]
+ games=[dict(r,note=(lambda row:row[0] if row else '')(c.execute('SELECT note FROM game_notes WHERE game_id=?',(r['id'],)).fetchone()),grouping=(lambda row:dict(row,groups=json.loads(row['groups_json'])) if row else None)(c.execute('SELECT * FROM game_groupings WHERE game_id=?',(r['id'],)).fetchone()),results={x['member_id']:x['score'] for x in c.execute('SELECT member_id,score FROM game_results WHERE game_id=?',(r['id'],))},participants=[x[0] for x in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(r['id'],))]) for r in c.execute('SELECT * FROM games WHERE deleted_at IS NULL ORDER BY date DESC,rowid DESC')]
  period=get_handicap_period(c)
  return {'members':members,'meals':meals,'rounds':rounds,'historical_scores':historical_scores,'games':games,'opening':132843,'balance':balance,'settings':{'handicap_period_months':period}}
 
@@ -64,7 +67,7 @@ def get_handicap_period(c):
  return period if period in (1,2,3,6,12) else 3
 
 def score_summary(c,member_id):
- row=c.execute('SELECT COUNT(*) AS count,COALESCE(SUM(score),0) AS total FROM (SELECT score FROM historical_scores WHERE member_id=? UNION ALL SELECT score FROM game_results WHERE member_id=?)',(member_id,member_id)).fetchone()
+ row=c.execute('SELECT COUNT(*) AS count,COALESCE(SUM(score),0) AS total FROM (SELECT score FROM historical_scores WHERE member_id=? UNION ALL SELECT r.score FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=? AND g.deleted_at IS NULL)',(member_id,member_id)).fetchone()
  return dict(row)
 
 def recalculate_handicap(c,member_id,as_of=None):
@@ -79,12 +82,12 @@ def recalculate_handicap(c,member_id,as_of=None):
  period=get_handicap_period(c)
  cutoff=months_before(period)
  rows=c.execute('''SELECT g.date,r.score FROM game_results r JOIN games g ON g.id=r.game_id
-                   WHERE r.member_id=? AND g.date>=? AND g.date<=? ORDER BY g.date''',
+                   WHERE r.member_id=? AND g.deleted_at IS NULL AND g.date>=? AND g.date<=?''',
                 (member_id,cutoff,today.isoformat())).fetchall()
  scores=[r['score'] for r in rows]
  if not scores and period<12:
   rows=c.execute('''SELECT g.date,r.score FROM game_results r JOIN games g ON g.id=r.game_id
-                    WHERE r.member_id=? AND g.date>=? AND g.date<=? ORDER BY g.date''',
+                    WHERE r.member_id=? AND g.deleted_at IS NULL AND g.date>=? AND g.date<=?''',
                  (member_id,months_before(12),today.isoformat())).fetchall()
   scores=[r['score'] for r in rows]
  basis=(f'{period}M' if period<12 else '1Y') if scores and (period==12 or any(r['date']>=cutoff for r in rows)) else '1Y' if scores else '초기'
@@ -195,17 +198,18 @@ def application(environ,start_response):
     matches=c.execute('SELECT * FROM members WHERE name=?',(name,)).fetchall()
     if len(matches)!=1:return send({'error':'회원을 찾을 수 없거나 같은 이름의 회원이 여러 명입니다.'},'404 Not Found')
     member=dict(matches[0]);member.pop('phone',None);id=member['id']
-    games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? ORDER BY g.date DESC,g.id',(id,))]
+    games=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,r.score FROM games g JOIN game_results r ON r.game_id=g.id WHERE r.member_id=? AND g.deleted_at IS NULL ORDER BY g.date DESC,g.id',(id,))]
     summary=recalculate_handicap(c,id);member.update(handicap=summary['handicap'],handicap_basis=summary['basis'],score_count=summary['count'],last_attended=games[0]['date'] if games else None)
     from zoneinfo import ZoneInfo
     from datetime import datetime
     today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
-    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.date>=? ORDER BY g.date,g.id',(id,id,today))]
+    upcoming=[dict(r) for r in c.execute('SELECT g.id,g.date,g.course,g.fairway,g.green,EXISTS(SELECT 1 FROM game_participants p WHERE p.game_id=g.id AND p.member_id=?) AS attending,EXISTS(SELECT 1 FROM game_results r WHERE r.game_id=g.id AND r.member_id=?) AS has_result FROM games g WHERE g.deleted_at IS NULL AND g.date>=? ORDER BY g.date,g.id',(id,id,today))]
+    for game in upcoming:game['attendance_locked']=(datetime.fromisoformat(game['date']).date()-datetime.now(ZoneInfo('Asia/Seoul')).date()).days<=3
     return send({'member':member,'games':games,'upcoming':upcoming})
    if path=='/api/member-directory' and method=='GET':
     members=[]
     for r in c.execute('SELECT id,name FROM members ORDER BY name COLLATE NOCASE,name').fetchall():
-     summary=recalculate_handicap(c,r['id']);last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=?',(r['id'],)).fetchone()[0]
+     summary=recalculate_handicap(c,r['id']);last_attended=c.execute('SELECT MAX(g.date) FROM game_results r JOIN games g ON g.id=r.game_id WHERE r.member_id=? AND g.deleted_at IS NULL',(r['id'],)).fetchone()[0]
      members.append({'name':r['name'],'handicap':summary['handicap'],'handicap_basis':summary['basis'],'score_count':summary['count'],'last_attended':last_attended})
     return send({'members':members})
    if path=='/api/profile-join' and method=='POST':
@@ -215,8 +219,8 @@ def application(environ,start_response):
     c.execute('BEGIN IMMEDIATE')
     members=c.execute('SELECT id,active FROM members WHERE name=?',(name,)).fetchall()
     if len(members)!=1 or not members[0]['active']:raise ValueError('활동 회원을 확인해주세요.')
-    game=c.execute('SELECT date FROM games WHERE id=?',(game_id,)).fetchone()
-    if not game or game['date']<datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat():raise ValueError('오늘 이후 경기만 참가할 수 있습니다.')
+    game=c.execute('SELECT date FROM games WHERE id=? AND deleted_at IS NULL',(game_id,)).fetchone()
+    if not game or (datetime.fromisoformat(game['date']).date()-datetime.now(ZoneInfo('Asia/Seoul')).date()).days<=3:raise ValueError('경기 3일 전부터 참석 변경이 마감됩니다.')
     member_id=members[0]['id']
     remove=body.get('remove',False)
     if type(remove)!=bool:raise ValueError('참석 여부를 확인해주세요.')
@@ -228,6 +232,22 @@ def application(environ,start_response):
     return send({'ok':True,'attending':not remove})
    if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not c.execute('SELECT 1 FROM sessions WHERE token=? AND expires>?',(token_hash,now)).fetchone():return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
+   if path=='/api/assistant' and method=='POST':
+    question=str(body.get('question','')).strip()
+    if not question or len(question)>500:return send({'error':'질문을 1~500자로 입력해주세요.'},'400 Bad Request')
+    c.execute('CREATE TABLE IF NOT EXISTS assistant_usage(token TEXT NOT NULL,day TEXT NOT NULL,count INTEGER NOT NULL,PRIMARY KEY(token,day))')
+    from zoneinfo import ZoneInfo
+    from datetime import datetime
+    today=datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
+    used=c.execute('SELECT count FROM assistant_usage WHERE token=? AND day=?',(token_hash,today)).fetchone()
+    if used and used['count']>=30:return send({'error':'AI 질문은 하루 30회까지 사용할 수 있습니다. 내일 다시 이용해주세요.'},'429 Too Many Requests')
+    try:
+     from ai_assistant import answer_question
+     answer=answer_question(c,question,today)
+    except RuntimeError as exc:return send({'error':str(exc)},'503 Service Unavailable')
+    c.execute('INSERT INTO assistant_usage VALUES(?,?,1) ON CONFLICT(token,day) DO UPDATE SET count=count+1',(token_hash,today))
+    c.execute('DELETE FROM assistant_usage WHERE day<?',(today,))
+    return send({'answer':answer})
    if path=='/api/share-link' and method=='POST':
     token=secrets.token_urlsafe(32);token_hash=hashlib.sha256(token.encode()).hexdigest()
     c.execute("INSERT INTO settings VALUES('share_token_hash',?) ON CONFLICT(id) DO UPDATE SET value=excluded.value",(token_hash,))
@@ -257,6 +277,10 @@ def application(environ,start_response):
      elif item.get('ok') is False: entry['status']='failed'
      entries[key]=entry
     return send({'smsg':entries})
+   if path=='/api/game-history' and method=='GET':
+    deleted=[dict(r) for r in c.execute('SELECT id,date,course,deleted_at FROM games WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC LIMIT 100')]
+    events=[dict(r) for r in c.execute('SELECT game_id,action,game_date,course,changed_at FROM game_change_log ORDER BY changed_at DESC,id DESC LIMIT 50')]
+    return send({'deleted_games':deleted,'events':events})
    if path=='/api/settings' and method=='GET':return send({'handicap_period_months':get_handicap_period(c)})
    if path=='/api/settings' and method=='POST':
     period=body.get('handicap_period_months')
@@ -287,19 +311,32 @@ def application(environ,start_response):
     note=body.get('note','')
     if not isinstance(note,str) or len(note)>1000:raise ValueError('비고는 1000자 이내로 입력해주세요.')
     id=str(body.get('id') or secrets.token_hex(16))
-    c.execute('INSERT INTO games VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET date=excluded.date,course=excluded.course,fairway=excluded.fairway,green=excluded.green',(id,body['date'],course,fairway,green))
+    c.execute('INSERT INTO games(id,date,course,fairway,green,deleted_at) VALUES(?,?,?,?,?,NULL) ON CONFLICT(id) DO UPDATE SET date=excluded.date,course=excluded.course,fairway=excluded.fairway,green=excluded.green',(id,body['date'],course,fairway,green))
     if 'note' in body:c.execute('INSERT INTO game_notes VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET note=excluded.note',(id,note))
     return send({'ok':True,'id':id})
    if path=='/api/games' and method=='DELETE':
     id=str(body['id']);c.execute('BEGIN IMMEDIATE')
-    if not c.execute('SELECT 1 FROM games WHERE id=?',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
+    game=c.execute('SELECT date,course FROM games WHERE id=? AND deleted_at IS NULL',(id,)).fetchone()
+    if not game:raise ValueError('경기를 찾을 수 없습니다.')
     ids=[r[0] for r in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(id,))]
-    c.execute('DELETE FROM games WHERE id=?',(id,))
+    now=int(time.time())
+    c.execute('UPDATE games SET deleted_at=? WHERE id=?',(now,id))
+    c.execute('INSERT INTO game_change_log(game_id,action,game_date,course,changed_at) VALUES(?,?,?,?,?)',(id,'deleted',game['date'],game['course'],now))
+    for member_id in ids:recalculate_handicap(c,member_id)
+    return send({'ok':True})
+   if path=='/api/games/restore' and method=='POST':
+    id=str(body['id']);c.execute('BEGIN IMMEDIATE')
+    game=c.execute('SELECT date,course FROM games WHERE id=? AND deleted_at IS NOT NULL',(id,)).fetchone()
+    if not game:raise ValueError('복구할 경기를 찾을 수 없습니다.')
+    ids=[r[0] for r in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(id,))]
+    now=int(time.time())
+    c.execute('UPDATE games SET deleted_at=NULL WHERE id=?',(id,))
+    c.execute('INSERT INTO game_change_log(game_id,action,game_date,course,changed_at) VALUES(?,?,?,?,?)',(id,'restored',game['date'],game['course'],now))
     for member_id in ids:recalculate_handicap(c,member_id)
     return send({'ok':True})
    if path=='/api/game-participants' and method=='POST':
     id=str(body['id']);ids=body.get('ids')
-    if not c.execute('SELECT 1 FROM games WHERE id=?',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
+    if not c.execute('SELECT 1 FROM games WHERE id=? AND deleted_at IS NULL',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
     if not isinstance(ids,list) or not all(isinstance(x,str) for x in ids) or len(ids)!=len(set(ids)):raise ValueError('참가 회원을 확인해주세요.')
     c.execute('BEGIN IMMEDIATE')
     previous={r[0] for r in c.execute('SELECT member_id FROM game_participants WHERE game_id=?',(id,))}
@@ -311,6 +348,7 @@ def application(environ,start_response):
    if path=='/api/game-groupings' and method=='PUT':
     id=str(body['id']);groups=body.get('groups')
     c.execute('BEGIN IMMEDIATE')
+    if not c.execute('SELECT 1 FROM games WHERE id=? AND deleted_at IS NULL',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
     saved=c.execute('SELECT * FROM game_groupings WHERE game_id=?',(id,)).fetchone()
     if not saved:raise ValueError('먼저 조편성을 만들어주세요.')
     if not isinstance(groups,list) or len(groups)!=saved['group_count'] or any(not isinstance(g,list) or len(g)!=saved['group_size'] for g in groups):raise ValueError(f"각 조는 {saved['group_size']}명으로 맞춰주세요.")
@@ -325,7 +363,7 @@ def application(environ,start_response):
     id=str(body['id']);count=body.get('group_count');size=body.get('group_size')
     if type(count)!=int or type(size)!=int or not 1<=count<=32 or not 1<=size<=20:raise ValueError('조 수(1~32)와 조당 인원(1~20)을 확인해주세요.')
     c.execute('BEGIN IMMEDIATE')
-    if not c.execute('SELECT 1 FROM games WHERE id=?',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
+    if not c.execute('SELECT 1 FROM games WHERE id=? AND deleted_at IS NULL',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
     members=[]
     for row in c.execute('SELECT m.id,m.name,m.handicap FROM members m JOIN game_participants p ON p.member_id=m.id WHERE p.game_id=? ORDER BY m.id',(id,)):
      member=dict(row);summary=recalculate_handicap(c,member['id']);member['handicap']=summary['handicap'];member['handicap_basis']=summary['basis'];members.append(member)
@@ -341,6 +379,7 @@ def application(environ,start_response):
     id=str(body['id']);member_id=str(body['member_id']);score=body.get('score')
     if score is not None and (type(score) not in (int,float) or not math.isfinite(score) or not -100<=score<=300):raise ValueError('결과 점수는 -100~300 사이의 숫자로 입력해주세요.')
     c.execute('BEGIN IMMEDIATE')
+    if not c.execute('SELECT 1 FROM games WHERE id=? AND deleted_at IS NULL',(id,)).fetchone():raise ValueError('경기를 찾을 수 없습니다.')
     if not c.execute('SELECT 1 FROM game_participants WHERE game_id=? AND member_id=?',(id,member_id)).fetchone():raise ValueError('이 경기의 참가 회원이 아닙니다.')
     m=c.execute('SELECT handicap FROM members WHERE id=?',(member_id,)).fetchone()
     c.execute('INSERT OR IGNORE INTO settings VALUES(?,?)',('handicap_initial:'+member_id,str(m['handicap'])))
