@@ -176,16 +176,7 @@ def application(environ,start_response):
     c.execute('DELETE FROM attempts WHERE ip=?',(ip,));c.execute('DELETE FROM sessions WHERE expires<?',(now,));token=secrets.token_urlsafe(32);c.execute('INSERT INTO sessions VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),now+86400))
     return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
    if path=='/api/login' and method=='POST':
-    ip=environ.get('REMOTE_ADDR','unknown');a=c.execute('SELECT * FROM attempts WHERE ip=?',(ip,)).fetchone()
-    if a and a['reset']>now and a['count']>=10:return send({'error':'잠시 후 다시 로그인해주세요.'},'429 Too Many Requests')
-    row=c.execute("SELECT value FROM settings WHERE id='password_hash'").fetchone()
-    spec=row['value'] if row else os.environ.get('SMSG_PASSWORD_HASH','')
-    if not spec:return send({'error':'서버 관리자가 로그인 비밀번호를 설정해야 합니다.'},'503 Service Unavailable')
-    salt,expected_hash=spec.split(':');actual=hashlib.pbkdf2_hmac('sha256',str(body.get('password','')).encode(),bytes.fromhex(salt),600000).hex()
-    if not hmac.compare_digest(actual,expected_hash):
-     count=a['count']+1 if a and a['reset']>now else 1;c.execute('INSERT OR REPLACE INTO attempts VALUES(?,?,?)',(ip,count,now+900 if count==1 else a['reset']));return send({'error':'비밀번호를 확인해주세요.'},'401 Unauthorized')
-    c.execute('DELETE FROM attempts WHERE ip=?',(ip,));c.execute('DELETE FROM sessions WHERE expires<?',(now,));token=secrets.token_urlsafe(32);c.execute('INSERT INTO sessions VALUES(?,?)',(hashlib.sha256(token.encode()).hexdigest(),now+86400))
-    return send({'ok':True},headers=[('Set-Cookie','smsg_session='+token+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'+('; Secure' if environ['wsgi.url_scheme']=='https' else ''))])
+    return send({'error':'회원 ID와 회원 비밀번호로 로그인해주세요.'},'410 Gone')
    if path=='/api/shared-state' and method=='GET':
     provided=environ.get('HTTP_AUTHORIZATION','')
     token=provided[7:] if provided.startswith('Bearer ') else ''
@@ -290,18 +281,7 @@ def application(environ,start_response):
     for member_id in ids:recalculate_handicap(c,member_id)
     return send({'ok':True,'handicap_period_months':period})
    if path=='/api/change-password' and method=='POST':
-    current=str(body.get('current_password',''));new=str(body.get('new_password',''))
-    row=c.execute("SELECT value FROM settings WHERE id='password_hash'").fetchone()
-    spec=row['value'] if row else os.environ.get('SMSG_PASSWORD_HASH','')
-    if not spec:return send({'error':'서버 비밀번호 설정을 확인해주세요.'},'503 Service Unavailable')
-    try:salt,expected_hash=spec.split(':');actual=hashlib.pbkdf2_hmac('sha256',current.encode(),bytes.fromhex(salt),600000).hex()
-    except (ValueError,TypeError):return send({'error':'서버 비밀번호 설정을 확인해주세요.'},'503 Service Unavailable')
-    if not hmac.compare_digest(actual,expected_hash):return send({'error':'현재 비밀번호가 맞지 않습니다.'},'400 Bad Request')
-    if len(new)<8 or len(new)>128:return send({'error':'새 비밀번호는 8~128자로 입력해주세요.'},'400 Bad Request')
-    salt=secrets.token_bytes(16);new_hash=salt.hex()+':'+hashlib.pbkdf2_hmac('sha256',new.encode(),salt,600000).hex()
-    c.execute("INSERT INTO settings VALUES('password_hash',?) ON CONFLICT(id) DO UPDATE SET value=excluded.value",(new_hash,))
-    c.execute('DELETE FROM sessions WHERE token<>?',(token_hash,))
-    return send({'ok':True})
+    return send({'error':'공용 비밀번호 변경은 사용할 수 없습니다.'},'410 Gone')
    if path=='/api/state' and method=='GET':
     return send(state_data(c,include_private=True))
    if path=='/api/games' and method=='POST':
