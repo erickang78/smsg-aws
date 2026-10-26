@@ -7,7 +7,7 @@
     },
     {
       "path": "app.py",
-      "sha256": "4a12f06fb7dcfb574aab139fc9480397fdeead0735cc5bef44f7689ee913c732"
+      "sha256": "aa7bcccddaa2c573cdd553085cffcc4185ef79a3455f415dfe7cdde448c69b97"
     },
     {
       "path": "backup-tools/backup_to_s3.py",
@@ -78,6 +78,10 @@
       "sha256": "a89eada03eb9593cc7ddf2792b81935fc799f88667538c308615d68c2141ac2c"
     },
     {
+      "path": "golfzon_results.py",
+      "sha256": "b9b79b67975c8397e6662db32044c3bedf833daf4ba62cd42df80d78318c0756"
+    },
+    {
       "path": "historical-scores.json",
       "sha256": "f33c18c8d323d7d87e428339787b6c83b30a27dbb488df4323a84a653883a983"
     },
@@ -91,11 +95,11 @@
     },
     {
       "path": "static/app.js",
-      "sha256": "8b754ddb605d9d48265e1247c24984a3cc80caf2c280188af09153d9a0c90bbb"
+      "sha256": "ea11f666fcc9b21b234549ee66bea9383e85360fc11f4cd014b9b9d9114c71bc"
     },
     {
       "path": "static/index.html",
-      "sha256": "c3baf5f345741da0476a5c427f239848f76ccd01f8fb8dbb13aad8941c4a597f"
+      "sha256": "e8a943b3425537efb6e241d50150b15eeeac1e7228720a665596fcd98893c9df"
     },
     {
       "path": "static/share.css",
@@ -111,7 +115,7 @@
     },
     {
       "path": "static/style.css",
-      "sha256": "e36d313b4dc6124e0c9d1b590a92c1300c9644f8793cd6a576c4fbc4b6f94af2"
+      "sha256": "1f0abe18baf7ef629ca18a53e573e1adbe2e6102e1e2d42490c792fffac038b5"
     }
   ]
 }
