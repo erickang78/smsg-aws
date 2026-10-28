@@ -7,7 +7,7 @@
     },
     {
       "path": "app.py",
-      "sha256": "aa7bcccddaa2c573cdd553085cffcc4185ef79a3455f415dfe7cdde448c69b97"
+      "sha256": "6f82d216e7f6f733391b096744aeb6d42561f5ce4d9871262656f9e7c2b9599f"
     },
     {
       "path": "backup-tools/backup_to_s3.py",
@@ -70,12 +70,16 @@
       "sha256": "b70b24d3a7519053de015f0c9494c94bebe1de2dfd143081790792ce8dfa5976"
     },
     {
+      "path": "database.py",
+      "sha256": "bce39da3daea38b144d342a54a3e202e0ebaf5a317d7263c3353b00ba9166573"
+    },
+    {
       "path": "dated-results.json",
       "sha256": "e1fb4efa6de90e1f325514c98005cb658766d952940c0b4f9c8d994b66b68796"
     },
     {
       "path": "golfzon-courses.json",
-      "sha256": "148521ef20f9536c09b499dfaa70f5def0c7aee58d14f561c6d7f76a5a31d201"
+      "sha256": "cdec4e43830c55fc5b07cc654612a019e483d07d632166fdf48b962da7e151de"
     },
     {
       "path": "golfzon_results.py",
