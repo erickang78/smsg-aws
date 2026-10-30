@@ -1,6 +1,6 @@
 import json, time
 from database import ROOT, connect, init
-from services.handicap import get_handicap_period
+from services.handicap import get_handicap_calculation_method, get_handicap_period
 from services.games import create_game, delete_game, restore_game, update_game_participants, create_game_grouping, update_game_grouping, change_profile_attendance, create_rounds, list_game_history, submit_game_results, submit_game_result
 from services.game_result_images import analyze_game_result_images
 from services.settings import get_backup_status
@@ -81,7 +81,7 @@ def application(environ,start_response):
     return send(get_backup_status())
    if path=='/api/game-history' and method=='GET':
     return send(list_game_history(c))
-   if path=='/api/settings' and method=='GET':return send({'handicap_period_months':get_handicap_period(c)})
+   if path=='/api/settings' and method=='GET':return send({'handicap_period_months':get_handicap_period(c),'handicap_calculation_method':get_handicap_calculation_method(c)})
    if path=='/api/settings' and method=='POST':
     return send(update_handicap_period(c,body))
    if path=='/api/member-password' and method=='POST':
