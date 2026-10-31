@@ -158,3 +158,14 @@ nav{grid-template-columns:repeat(5,minmax(0,1fr))}.assistant-privacy{padding:13p
 .welcome-user{display:inline-block;margin-bottom:6px;color:#6e8266;font-size:13px;font-weight:600}
 
 .member-password-message{min-height:0;margin:8px 0 0;color:#a34f3a;font-size:13px;line-height:1.5}.member-password-message:empty{display:none}
+
+
+.member-export-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.member-export-actions button{margin:0}.member-export-actions .secondary{white-space:nowrap}
+
+
+/* Keep the member sort and image export controls aligned on one row. */
+#content .member-list-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 16px}
+#content .member-list-toolbar .filters{flex:1;min-width:0;margin:0}
+#content .member-list-toolbar .filters label{margin:0}
+#content #member-results-image{flex:0 0 auto;white-space:nowrap;margin:0 0 0 auto}
+@media(max-width:420px){#content .member-list-toolbar{gap:8px}#content .member-list-toolbar #membersort{min-width:0}#content #member-results-image{font-size:12px;padding:9px 10px}}
