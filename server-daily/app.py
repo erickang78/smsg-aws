@@ -14,6 +14,9 @@ from services.web import serve_web_page
 from services.state import state_data
 from services.assistant import ask_assistant, AssistantRequestError
 from services.share import read_shared_state, create_share_link, revoke_share_link
+from services.yardage_cache import read_course_yardage, save_course_yardage
+from services.group_scores import get_group_scores, save_group_score
+from services.auth import current_member_id, is_group_score_operator
 from functools import partial
 MEAL_NOTE_2='진팀이 이긴팀 밥사주기'
 MEAL_NOTE_5='밥값\n1등 1만원\n2등 1.5만원\n3등 2만원\n4등 2.5만원\n5등 3만원'
@@ -66,6 +69,24 @@ def application(environ,start_response):
     return send(change_profile_attendance(c,body))
    if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not session_is_authenticated(c,token_hash,now):return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
+   if path=='/api/course-yardage' and method=='GET':
+    from urllib.parse import parse_qs
+    course_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+    if not course_id.isdigit() or len(course_id)>20:return send({'error':'골프존 코스 ID를 확인해주세요.'},'400 Bad Request')
+    return send(read_course_yardage(c,course_id))
+   if path=='/api/course-yardage' and method=='POST':
+    return send(save_course_yardage(c,body))
+   if path=='/api/game-group-scores' and method in ('GET','POST'):
+    from urllib.parse import parse_qs
+    member_id=current_member_id(c,token_hash,now)
+    operator=is_group_score_operator(member_id)
+    try:
+     if method=='GET':
+      game_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+      return send(get_group_scores(c,game_id,member_id,operator))
+     result=save_group_score(c,body,member_id,is_operator=operator)
+     return send(result)
+    except PermissionError as exc:return send({'error':str(exc)},'403 Forbidden')
    if path=='/api/assistant' and method=='POST':
     try:
      return send(ask_assistant(c,token_hash,body.get('question','')))

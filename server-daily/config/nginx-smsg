@@ -7,6 +7,7 @@ server {
 server {
  listen 443 ssl;
  server_name smsg.13-125-8-5.sslip.io;
+    client_max_body_size 6m;
  ssl_certificate /etc/letsencrypt/live/smsg.13-125-8-5.sslip.io/fullchain.pem;
  ssl_certificate_key /etc/letsencrypt/live/smsg.13-125-8-5.sslip.io/privkey.pem;
  location / {

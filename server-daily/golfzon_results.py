@@ -124,7 +124,7 @@ def recognize_scores(data_urls, game, participants):
             "Normalize dates to YYYY-MM-DD. If multiple screenshots contain differing round headers, include each distinct header. Use null for a header field that is not visible or legible. "
             "Also extract each visible player's exact displayed nickname and their final stroke-play score relative to par. "
             "A displayed +4 is numeric 4, E or even par is 0, and -2 is numeric -2. Do not extract rank, handicap, or hole-by-hole strokes. "
-            "Use the supplied participant roster to disambiguate visually similar names, but preserve the exact displayed nickname. "
+            "Use the supplied participant roster to disambiguate visually similar names, but preserve the exact displayed nickname. Then do a strict top-to-bottom second pass over every visible leaderboard row. Medal or ribbon icons for ranks 1, 2, and 3 are rank decorations, not reasons to skip a player: extract their exact nicknames and final scores just like every other row. Re-check the first three rows before returning and include every legible row, even when the player is not registered; the server will filter nonparticipants safely. "
             "Include only rows where both nickname and final score are clearly legible. Never guess unclear digits or names. "
             "The screenshot may show only part of the leaderboard; extract all clearly visible rows."
         ),

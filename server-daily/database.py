@@ -14,7 +14,7 @@ def init():
   c.executescript('''PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS game_groupings(game_id TEXT PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,groups_json TEXT NOT NULL,group_count INTEGER NOT NULL,group_size INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS game_notes(game_id TEXT PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,note TEXT NOT NULL);
-CREATE TABLE IF NOT EXISTS games(id TEXT PRIMARY KEY,date TEXT NOT NULL,course TEXT NOT NULL,fairway INTEGER NOT NULL,green INTEGER NOT NULL,deleted_at INTEGER);
+CREATE TABLE IF NOT EXISTS games(id TEXT PRIMARY KEY,date TEXT NOT NULL,course TEXT NOT NULL,fairway INTEGER NOT NULL,green INTEGER NOT NULL,par3_holes INTEGER NOT NULL DEFAULT 4,deleted_at INTEGER);
 CREATE TABLE IF NOT EXISTS game_change_log(id INTEGER PRIMARY KEY AUTOINCREMENT,game_id TEXT NOT NULL,action TEXT NOT NULL,game_date TEXT NOT NULL,course TEXT NOT NULL,changed_at INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS game_participants(game_id TEXT NOT NULL REFERENCES games(id) ON DELETE CASCADE,member_id TEXT NOT NULL REFERENCES members(id),PRIMARY KEY(game_id,member_id));
 CREATE TABLE IF NOT EXISTS historical_scores(member_id TEXT NOT NULL REFERENCES members(id),position INTEGER NOT NULL,score REAL NOT NULL,PRIMARY KEY(member_id,position));
@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS members(id TEXT PRIMARY KEY,name TEXT NOT NULL,handic
 CREATE TABLE IF NOT EXISTS meals(id TEXT PRIMARY KEY,date TEXT NOT NULL,place TEXT NOT NULL,people INTEGER NOT NULL,income INTEGER NOT NULL,extra INTEGER NOT NULL,expense INTEGER NOT NULL,note TEXT NOT NULL,position INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS rounds(date TEXT PRIMARY KEY,groups_json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS settings(id TEXT PRIMARY KEY,value TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS course_yardage_cache(course_id TEXT PRIMARY KEY,course_name TEXT NOT NULL,yardage_json TEXT NOT NULL,saved_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS game_group_scores(game_id TEXT NOT NULL REFERENCES games(id) ON DELETE CASCADE,group_number INTEGER NOT NULL,hole_number INTEGER NOT NULL CHECK(hole_number BETWEEN 1 AND 18),score INTEGER NOT NULL CHECK(score BETWEEN -10 AND 10),updated_by TEXT NOT NULL REFERENCES members(id),updated_at INTEGER NOT NULL,PRIMARY KEY(game_id,group_number,hole_number));
+CREATE TABLE IF NOT EXISTS game_group_near_distances(game_id TEXT NOT NULL REFERENCES games(id) ON DELETE CASCADE,group_number INTEGER NOT NULL,hole_number INTEGER NOT NULL CHECK(hole_number BETWEEN 1 AND 18),distance REAL NOT NULL CHECK(distance>=0 AND distance<=999.9),updated_by TEXT NOT NULL REFERENCES members(id),updated_at INTEGER NOT NULL,PRIMARY KEY(game_id,group_number,hole_number));
 CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,expires INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS member_logins(member_id TEXT PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,username TEXT NOT NULL UNIQUE,salt TEXT NOT NULL,password_hash TEXT NOT NULL,created_at INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS attempts(ip TEXT PRIMARY KEY,count INTEGER NOT NULL,reset INTEGER NOT NULL);''')
@@ -32,6 +35,8 @@ CREATE TABLE IF NOT EXISTS attempts(ip TEXT PRIMARY KEY,count INTEGER NOT NULL,r
    c.execute("ALTER TABLE members ADD COLUMN nickname TEXT NOT NULL DEFAULT ''")
   if 'deleted_at' not in [r['name'] for r in c.execute('PRAGMA table_info(games)')]:
    c.execute('ALTER TABLE games ADD COLUMN deleted_at INTEGER')
+  if 'par3_holes' not in [r['name'] for r in c.execute('PRAGMA table_info(games)')]:
+   c.execute('ALTER TABLE games ADD COLUMN par3_holes INTEGER NOT NULL DEFAULT 4')
   if 'member_id' not in [r['name'] for r in c.execute('PRAGMA table_info(sessions)')]:
    c.execute('ALTER TABLE sessions ADD COLUMN member_id TEXT REFERENCES members(id)')
   c.execute('BEGIN IMMEDIATE')
