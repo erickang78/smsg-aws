@@ -34,6 +34,18 @@ MEAL_NOTE_4='밥값 1등 5천원, 2등 1만원, 3등 2만원 4등 3만원'
 
 
 
+def queue_kakao_login_notice(username):
+ import json,socket
+ try:
+  with socket.socket(socket.AF_UNIX,socket.SOCK_STREAM) as client:
+   client.settimeout(2)
+   client.connect('/run/smsg-kakao-login/bridge.sock')
+   client.sendall(json.dumps({'username':str(username or '')},ensure_ascii=False).encode('utf-8')+b'\n')
+   response=client.recv(2048)
+  result=json.loads(response.decode('utf-8'))
+  if not result.get('queued'):print('smsg_kakao_login_notice_not_queued',result.get('reason','unknown'),flush=True)
+ except Exception as error:print('smsg_kakao_login_notice_failed',type(error).__name__,flush=True)
+
 def application(environ,start_response):
  send=partial(json_response,start_response)
  path=environ.get('PATH_INFO','/');method=environ.get('REQUEST_METHOD','GET')
@@ -50,6 +62,7 @@ def application(environ,start_response):
    token,token_hash=session_tokens(environ);now=int(time.time())
    if path=='/api/member-login' and method=='POST':
     result,status,cookie=authenticate_member(c,body,environ.get('REMOTE_ADDR','unknown'),now,environ['wsgi.url_scheme']=='https')
+    if str(status).startswith('200') and cookie:queue_kakao_login_notice(body.get('username',''))
     return send(result,status,headers=[('Set-Cookie',cookie)] if cookie else [])
    if path=='/api/login' and method=='POST':
     return send({'error':'회원 ID와 회원 비밀번호로 로그인해주세요.'},'410 Gone')
