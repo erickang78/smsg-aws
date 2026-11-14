@@ -3,11 +3,13 @@ from database import ROOT, connect, init
 from services.handicap import get_handicap_calculation_method, get_handicap_game_count, get_handicap_period
 from services.games import create_game, delete_game, restore_game, update_game_participants, create_game_grouping, update_game_grouping, change_profile_attendance, create_rounds, list_game_history, submit_game_results, submit_game_result
 from services.game_result_images import analyze_game_result_images
+from services.game_photos import init_game_photos, list_game_photos, add_game_photos, remove_game_photo, read_game_photo
 from services.settings import get_backup_status
 from services.settings import update_handicap_period
 from services.auth import change_member_password, current_member_name, authenticate_member, logout_member
 from services.members import get_member_profile, list_member_directory, save_member
 from services.meals import save_meal, delete_meal
+from services.meal_photos import init_meal_photos, list_meal_photos, add_meal_photos, remove_meal_photo, read_meal_photo
 from services.http_utils import json_response, session_tokens, session_is_authenticated
 from services.http_utils import read_api_request
 from services.web import serve_web_page
@@ -138,6 +140,22 @@ def application(environ,start_response):
     return send(update_game_grouping(c,str(body['id']),body.get('groups')))
    if path=='/api/game-groupings' and method=='POST':
     return send(create_game_grouping(c,str(body['id']),body.get('group_count'),body.get('group_size')))
+   if path=='/api/game-photos' and method in ('GET','POST','DELETE'):
+    member_id=current_member_id(c,token_hash,now)
+    if method=='GET':
+     from urllib.parse import parse_qs
+     game_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+     return send(list_game_photos(c,game_id,member_id))
+    if method=='POST':return send(add_game_photos(c,body,member_id))
+    try:return send(remove_game_photo(c,body.get('id'),member_id))
+    except PermissionError as exc:return send({'error':str(exc)},'403 Forbidden')
+   if path.startswith('/api/game-photos/') and path.endswith('/image') and method=='GET':
+    photo_id=path[len('/api/game-photos/'):-len('/image')].strip('/')
+    photo=read_game_photo(c,photo_id)
+    if photo is None:return send({'error':'사진을 찾을 수 없습니다.'},'404 Not Found')
+    mime,data=photo
+    start_response('200 OK',[('Content-Type',mime),('Content-Length',str(len(data))),('Cache-Control','private, max-age=300'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'none'; sandbox")])
+    return [data]
    if path=='/api/game-result-image' and method=='POST':
     try:
      return send(analyze_game_result_images(c,body))
@@ -148,6 +166,22 @@ def application(environ,start_response):
     return send(submit_game_result(c,body))
    if path=='/api/members' and method=='POST':
     return send(save_member(c,body))
+   if path=='/api/meal-photos' and method in ('GET','POST','DELETE'):
+    member_id=current_member_id(c,token_hash,now)
+    if method=='GET':
+     from urllib.parse import parse_qs
+     meal_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+     return send(list_meal_photos(c,meal_id,member_id))
+    if method=='POST':return send(add_meal_photos(c,body,member_id))
+    try:return send(remove_meal_photo(c,body.get('id'),member_id))
+    except PermissionError as exc:return send({'error':str(exc)},'403 Forbidden')
+   if path.startswith('/api/meal-photos/') and path.endswith('/image') and method=='GET':
+    photo_id=path[len('/api/meal-photos/'):-len('/image')].strip('/')
+    photo=read_meal_photo(c,photo_id)
+    if photo is None:return send({'error':'사진을 찾을 수 없습니다.'},'404 Not Found')
+    mime,data=photo
+    start_response('200 OK',[('Content-Type',mime),('Content-Length',str(len(data))),('Cache-Control','private, max-age=300'),('X-Content-Type-Options','nosniff'),('Content-Security-Policy',"default-src 'none'; sandbox")])
+    return [data]
    if path=='/api/meals' and method=='POST':
     return send(save_meal(c,body))
    if path=='/api/meals' and method=='DELETE':
@@ -159,6 +193,7 @@ def application(environ,start_response):
  except Exception:return send({'error':'서버 오류가 발생했습니다. 다시 시도해주세요.'},'500 Internal Server Error')
 
 init()
+with connect() as c:init_game_photos(c);init_meal_photos(c)
 if __name__=='__main__':
  from wsgiref.simple_server import make_server
  print('Local preview: http://127.0.0.1:8091')
