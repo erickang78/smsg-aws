@@ -15,6 +15,8 @@ from services.http_utils import read_api_request
 from services.web import serve_web_page
 from services.state import state_data
 from services.assistant import ask_assistant, AssistantRequestError
+from services.swing_analysis import analyze_swing, SwingAnalysisError
+from services.swing_video import prepare_swing_video, read_swing_preview, read_swing_thumbnail, extract_swing_preview_frames, list_swing_videos, delete_swing_video
 from services.share import read_shared_state, create_share_link, revoke_share_link
 from services.yardage_cache import read_course_yardage, save_course_yardage
 from services.group_scores import get_group_scores, save_group_score
@@ -102,6 +104,39 @@ def application(environ,start_response):
      result=save_group_score(c,body,member_id,is_operator=operator)
      return send(result)
     except PermissionError as exc:return send({'error':str(exc)},'403 Forbidden')
+   if path=='/api/swing-videos' and method=='GET':
+    member_id=current_member_id(c,token_hash,now)
+    return send(list_swing_videos(c,member_id))
+   if path=='/api/swing-videos' and method=='POST':
+    member_id=current_member_id(c,token_hash,now)
+    try:return send(delete_swing_video(c,member_id,str(body.get('id',''))))
+    except SwingAnalysisError as exc:return send({'error':str(exc)},exc.status)
+   if path=='/api/swing-video-frames' and method=='GET':
+    from urllib.parse import parse_qs
+    preview_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+    member_id=current_member_id(c,token_hash,now)
+    try:return send(extract_swing_preview_frames(c,member_id,preview_id))
+    except SwingAnalysisError as exc:return send({'error':str(exc)},exc.status)
+   if path in ('/api/swing-video-preview','/api/swing-video-thumbnail') and method=='GET':
+    from urllib.parse import parse_qs
+    video_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+    member_id=current_member_id(c,token_hash,now)
+    if path.endswith('preview'):payload,status,headers=read_swing_preview(c,member_id,video_id,environ.get('HTTP_RANGE',''))
+    else:payload,status,headers=read_swing_thumbnail(c,member_id,video_id)
+    start_response(status,headers)
+    return [payload]
+   if path=='/api/swing-video-preview' and method=='GET':
+    from urllib.parse import parse_qs
+    preview_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+    payload,status,headers=read_swing_preview(preview_id,environ.get('HTTP_RANGE',''))
+    start_response(status,headers)
+    return [payload]
+   if path=='/api/swing-video-prepare' and method=='POST':
+    try:return send(prepare_swing_video(c,current_member_id(c,token_hash,now),body))
+    except SwingAnalysisError as exc:return send({'error':str(exc)},exc.status)
+   if path=='/api/swing-analysis' and method=='POST':
+    try:return send(analyze_swing(c,token_hash,body,member_id=current_member_id(c,token_hash,now)))
+    except SwingAnalysisError as exc:return send({'error':str(exc)},exc.status)
    if path=='/api/assistant' and method=='POST':
     try:
      return send(ask_assistant(c,token_hash,body.get('question','')))
@@ -140,6 +175,15 @@ def application(environ,start_response):
     return send(update_game_grouping(c,str(body['id']),body.get('groups')))
    if path=='/api/game-groupings' and method=='POST':
     return send(create_game_grouping(c,str(body['id']),body.get('group_count'),body.get('group_size')))
+   if path=='/api/photo-gallery' and method=='GET':
+    member_id=current_member_id(c,token_hash,now)
+    rows=c.execute('''SELECT p.id,'game' AS source,p.original_name,p.created_at,g.course AS title,g.date AS record_date,m.name AS author
+        FROM game_photos p JOIN games g ON g.id=p.game_id JOIN members m ON m.id=p.member_id
+        UNION ALL
+        SELECT p.id,'meal' AS source,p.original_name,p.created_at,l.place AS title,l.date AS record_date,m.name AS author
+        FROM meal_photos p JOIN meals l ON l.id=p.meal_id JOIN members m ON m.id=p.member_id
+        ORDER BY 4 DESC,1 DESC''').fetchall()
+    return send({'photos':[{'id':r['id'],'source':r['source'],'name':r['original_name'],'created_at':r['created_at'],'title':r['title'],'record_date':r['record_date'],'author':r['author'],'image_url':'/api/'+('game' if r['source']=='game' else 'meal')+'-photos/'+r['id']+'/image'} for r in rows]})
    if path=='/api/game-photos' and method in ('GET','POST','DELETE'):
     member_id=current_member_id(c,token_hash,now)
     if method=='GET':
