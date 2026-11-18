@@ -1,7 +1,49 @@
 {
   "source": "https://www.golfzon.com/course/main",
-  "updated_at": "2026-11-16T16:30:02.142655+00:00",
+  "updated_at": "2026-11-17T16:30:02.208938+00:00",
   "courses": [
+    {
+      "id": 100001110,
+      "name": "고베 파인 우즈 GC",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001089,
+      "name": "라힌치 골프클럽",
+      "region": "유럽",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001108,
+      "name": "레이크사이드 CC - 남",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001107,
+      "name": "레이크사이드 CC - 동",
+      "region": "수도권",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001109,
+      "name": "와카기 골프클럽",
+      "region": "일본",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
+    {
+      "id": 100001070,
+      "name": "AI 레드락 CC",
+      "region": "가상CC",
+      "course_difficulty": 4.0,
+      "green_difficulty": 4.0
+    },
     {
       "id": 100000389,
       "name": "만쥬 GC",
@@ -167,71 +209,71 @@
       "id": 100001076,
       "name": "그레이트 오크스 CC",
       "region": "미국",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.0
     },
     {
       "id": 100000364,
       "name": "다이 하코네 CC",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.0,
+      "green_difficulty": 2.0
     },
     {
       "id": 100001073,
       "name": "더 클래식 GC",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100001074,
       "name": "레이크 머세드 GC",
       "region": "미국",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 3.5,
+      "green_difficulty": 2.5
     },
     {
       "id": 100001079,
       "name": "레이크 포레스트 - 센추리",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.5,
+      "green_difficulty": 2.5
     },
     {
       "id": 100001078,
       "name": "세고비아 GC 인 치요다",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 3.0,
+      "green_difficulty": 2.5
     },
     {
       "id": 102560000,
       "name": "세인트 앤드류스 - 뉴 코스",
       "region": "유럽",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
     },
     {
       "id": 102564096,
       "name": "세인트 앤드류스 - 쥬빌리 코스",
       "region": "유럽",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.5,
+      "green_difficulty": 1.5
     },
     {
       "id": 100001072,
       "name": "오키드 CC",
       "region": "기타",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 4.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100001077,
       "name": "J골프 카스미가우라",
       "region": "일본",
-      "course_difficulty": 4.0,
-      "green_difficulty": 4.0
+      "course_difficulty": 2.0,
+      "green_difficulty": 3.0
     },
     {
       "id": 100001060,
@@ -874,8 +916,8 @@
       "id": 100000962,
       "name": "포도 CC - 자두/샤인",
       "region": "경상도",
-      "course_difficulty": 3.5,
-      "green_difficulty": 2.5
+      "course_difficulty": 4.0,
+      "green_difficulty": 3.0
     },
     {
       "id": 100000961,
@@ -1042,8 +1084,8 @@
       "id": 100000929,
       "name": "모나크 CC",
       "region": "충청도",
-      "course_difficulty": 2.0,
-      "green_difficulty": 3.0
+      "course_difficulty": 2.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000931,
@@ -1196,8 +1238,8 @@
       "id": 100000912,
       "name": "세레니티 골프&리조트 - 리버/블루",
       "region": "충청도",
-      "course_difficulty": 2.5,
-      "green_difficulty": 2.0
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
     },
     {
       "id": 100000913,
@@ -1287,14 +1329,14 @@
       "id": 100000891,
       "name": "골프존카운티 드래곤 - 레이크/드래곤",
       "region": "전라도",
-      "course_difficulty": 2.5,
+      "course_difficulty": 3.5,
       "green_difficulty": 3.5
     },
     {
       "id": 100000892,
       "name": "골프존카운티 드래곤 - 스카이/레이크",
       "region": "전라도",
-      "course_difficulty": 3.0,
+      "course_difficulty": 4.0,
       "green_difficulty": 3.0
     },
     {
@@ -1518,8 +1560,8 @@
       "id": 100000869,
       "name": "타미우스 GC - 마운틴/우드",
       "region": "제주도",
-      "course_difficulty": 2.5,
-      "green_difficulty": 2.5
+      "course_difficulty": 3.0,
+      "green_difficulty": 3.0
     },
     {
       "id": 100000870,
@@ -2309,15 +2351,15 @@
       "id": 100000755,
       "name": "골든 베이 - MOUNTAIN/VALLEY",
       "region": "충청도",
-      "course_difficulty": 2.5,
+      "course_difficulty": 3.5,
       "green_difficulty": 3.0
     },
     {
       "id": 100000754,
       "name": "골든 베이 - OCEAN/MOUNTAIN",
       "region": "충청도",
-      "course_difficulty": 2.5,
-      "green_difficulty": 3.0
+      "course_difficulty": 3.5,
+      "green_difficulty": 3.5
     },
     {
       "id": 100000756,
@@ -2554,8 +2596,8 @@
       "id": 100000727,
       "name": "필로스 CC - EAST/WEST",
       "region": "수도권",
-      "course_difficulty": 4.5,
-      "green_difficulty": 1.5
+      "course_difficulty": 4.0,
+      "green_difficulty": 2.0
     },
     {
       "id": 100000729,
@@ -3430,7 +3472,7 @@
       "name": "골프존카운티 구미",
       "region": "경상도",
       "course_difficulty": 1.0,
-      "green_difficulty": 1.0
+      "green_difficulty": 2.0
     },
     {
       "id": 102367488,
