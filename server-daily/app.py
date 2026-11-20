@@ -17,6 +17,7 @@ from services.state import state_data
 from services.assistant import ask_assistant, AssistantRequestError
 from services.swing_analysis import analyze_swing, SwingAnalysisError
 from services.swing_video import prepare_swing_video, read_swing_preview, read_swing_thumbnail, extract_swing_preview_frames, list_swing_videos, delete_swing_video
+from services.google_places_photos import google_places_photos_enabled, fetch_restaurant_photo, GooglePlacesPhotoError
 from services.share import read_shared_state, create_share_link, revoke_share_link
 from services.yardage_cache import read_course_yardage, save_course_yardage
 from services.group_scores import get_group_scores, save_group_score
@@ -65,7 +66,7 @@ def application(environ,start_response):
   with connect() as c:
    token,token_hash=session_tokens(environ);now=int(time.time())
    if path=='/api/member-login' and method=='POST':
-    result,status,cookie=authenticate_member(c,body,environ.get('REMOTE_ADDR','unknown'),now,environ['wsgi.url_scheme']=='https')
+    result,status,cookie=authenticate_member(c,body,environ.get('REMOTE_ADDR','unknown'),now,environ.get('HTTP_X_FORWARDED_PROTO',environ['wsgi.url_scheme']).split(',')[0].strip()=='https')
     if str(status).startswith('200') and cookie:queue_kakao_login_notice(body.get('username',''))
     return send(result,status,headers=[('Set-Cookie',cookie)] if cookie else [])
    if path=='/api/login' and method=='POST':
@@ -86,6 +87,11 @@ def application(environ,start_response):
     return send(change_profile_attendance(c,body))
    if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not session_is_authenticated(c,token_hash,now):return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
+   if path=='/api/restaurant-photo-status' and method=='GET':
+    return send({'enabled':google_places_photos_enabled()})
+   if path=='/api/restaurant-photo' and method=='POST':
+    try:return send(fetch_restaurant_photo(body.get('name',''),body.get('address','')))
+    except GooglePlacesPhotoError as exc:return send({'error':str(exc)},exc.status)
    if path=='/api/course-yardage' and method=='GET':
     from urllib.parse import parse_qs
     course_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]

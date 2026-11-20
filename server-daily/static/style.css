@@ -263,3 +263,44 @@ nav{grid-template-columns:repeat(5,minmax(0,1fr))}.assistant-privacy{padding:13p
 .game-photo-viewer .photo-viewer-nav:disabled{opacity:.38}.game-photo-viewer .photo-viewer-nav[hidden],.game-photo-viewer .photo-viewer-count[hidden]{display:none!important}
 .game-photo-viewer .photo-viewer-count{position:absolute;z-index:4;left:50%;bottom:18px;transform:translateX(-50%);padding:6px 12px;border-radius:999px;background:rgba(15,25,20,.7);color:#fff;font-size:13px;font-weight:700;line-height:1.2;pointer-events:none}
 @media(max-width:480px){.game-photo-viewer .photo-viewer-nav{width:40px;height:48px;font-size:31px}.game-photo-viewer .photo-viewer-prev{left:7px}.game-photo-viewer .photo-viewer-next{right:7px}}
+
+/* Left slide navigation */
+.menu-trigger{margin-left:0!important;flex:0 0 52px;width:52px;height:52px;padding:0;display:grid;place-items:center;border:0;cursor:pointer}
+.menu-trigger svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.app-menu-overlay{display:block;visibility:hidden;pointer-events:none;position:fixed;inset:0;z-index:12000;background:rgba(18,34,25,.42);opacity:0;transition:opacity .35s ease,visibility 0s linear 1s}
+.app-menu-overlay.open{visibility:visible;pointer-events:auto;opacity:1;transition:opacity .35s ease,visibility 0s}
+.app-menu-panel{position:absolute;inset:0 auto 0 0;width:min(84vw,360px);overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 22px);background:#f7f8f3;box-shadow:12px 0 36px rgba(16,37,25,.18);transform:translateX(-102%);will-change:transform;transition:transform 1s cubic-bezier(.4,0,.2,1)}
+.app-menu-overlay.open .app-menu-panel{transform:translateX(0)}
+.app-menu-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:4px 2px 20px;border-bottom:1px solid #dce4d7}
+.app-menu-head small{color:#7c8b75;font-size:12px}
+.app-menu-head h2{margin:5px 0 0;font-size:22px}
+.app-menu-head>button{width:42px;height:42px;padding:0;border-radius:13px;background:#e8efe2;font-size:24px}
+.app-menu-group{display:grid;gap:7px;padding:18px 0 4px}
+.app-menu-group>span{padding:0 5px 3px;color:#82907a;font-size:12px;font-weight:700}
+.app-menu-group>button{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;text-align:left;padding:10px 13px;border-color:#e0e7db;border-radius:12px;background:#fff}
+.app-menu-group>button span{font-weight:700}
+.app-menu-group>button small{color:#84917d;font-size:11px;text-align:right}
+#menu-logout{color:#9b554d;margin-top:3px}
+@media(prefers-reduced-motion:reduce){.app-menu-overlay,.app-menu-panel{transition:none}}
+
+/* Gimpo local restaurant directory */
+.restaurant-area-filters{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 10px;margin:4px 0 10px;scrollbar-width:thin}
+.restaurant-area-button{flex:0 0 auto;border:1px solid #d4decc;border-radius:999px;padding:9px 15px;background:#fff;color:#355238}
+.restaurant-area-button.selected{background:#244e3b;border-color:#244e3b;color:#fff}
+.restaurant-card h3{margin:13px 0 4px}
+.restaurant-card p{margin:8px 0;color:#637360;font-size:14px}
+.restaurant-card .restaurant-category{margin:2px 0 12px;color:#82907a;font-size:12px}
+.restaurant-card .restaurant-address{font-size:13px}
+.restaurant-card-top{display:flex;align-items:center;gap:7px}
+.restaurant-source-badge{color:#52744e;background:#e8efe2;border-radius:999px;padding:6px 9px;font-size:11px}
+.restaurant-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.restaurant-actions a{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid #d4decc;border-radius:9px;color:#355238;text-decoration:none;font-size:13px}
+.restaurant-actions .restaurant-official-link{margin-left:auto;color:#687766;background:#f7f8f3}
+
+
+/* Gimpo restaurant card photo sizing */
+.restaurant-card.has-photo{display:flow-root}
+.restaurant-card .restaurant-photo{float:right;width:90px;margin:0 0 8px 12px}
+.restaurant-card .restaurant-photo img{display:block!important;width:90px!important;height:90px!important;max-width:90px!important;object-fit:cover;border-radius:10px}
+.restaurant-card .restaurant-photo figcaption{font-size:9px;line-height:1.2;text-align:center;margin-top:4px}
+.restaurant-card .restaurant-photo-credit{color:#71816d;white-space:nowrap;text-decoration:none}
