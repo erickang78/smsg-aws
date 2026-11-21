@@ -81,6 +81,16 @@ function renderRestaurants(c){
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){observer.unobserve(entry.target);load(entry.target)}}),{rootMargin:'120px'});
   figures.forEach(figure=>observer.observe(figure));
  };
+ const kakao=document.createElement('section');
+ c.append(kakao);
+ renderKakaoRestaurants(kakao);
+ filters.addEventListener('click',event=>{
+  const button=event.target.closest('[data-restaurant-area]');
+  if(!button)return;
+  const area=button.dataset.restaurantArea;
+  kakao.querySelector('[name="neighborhood"]').value=area==='전체'?'김포시':`김포시 ${area==='고촌'?'고촌읍':area}`;
+ });
+ kakao.querySelector('[name="neighborhood"]').value='김포시';
  const draw=()=>{const q=String(input.value||'').trim().toLocaleLowerCase(),found=places.filter(p=>(activeArea==='전체'||p.area===activeArea)&&(!q||[p.name,p.area,p.category,p.menu,p.address].join(' ').toLocaleLowerCase().includes(q)));
   list.innerHTML=found.length?found.map(p=>{const hasPhoto=Boolean(p.photo||googlePhotosEnabled);const photo=p.photo?`<figure class="restaurant-photo"><img src="${esc(p.photo)}" alt="${esc(p.name)} 대표 사진" loading="lazy" decoding="async"><figcaption><a class="restaurant-photo-credit" href="${esc(p.official)}" target="_blank" rel="noopener noreferrer">사진: 김포시 ↗</a></figcaption></figure>`:googlePhotosEnabled?`<figure class="restaurant-photo google-restaurant-photo" data-restaurant-name="${esc(p.name)}" data-restaurant-address="${esc(p.address)}"><img alt="${esc(p.name)} 대표 사진" loading="lazy" decoding="async"><figcaption>Google Maps</figcaption></figure>`:'';return `<article class="card restaurant-card${hasPhoto?' has-photo':''}"><div class="restaurant-card-top"><span class="badge">${esc(p.area)}</span>${p.official?'<span class="restaurant-source-badge">김포시 정보</span>':''}</div>${photo}<h3>${esc(p.name)}</h3><p class="restaurant-category">${esc(p.category)}</p><p><b>대표 메뉴</b> · ${esc(p.menu)}</p><p class="restaurant-address">${esc(p.address)}</p><div class="restaurant-actions"><a class="secondary restaurant-map-link" href="https://map.naver.com/p/search/${encodeURIComponent(p.name+' '+p.area+' 김포')}" target="_blank" rel="noopener noreferrer">지도에서 보기 ↗</a>${p.phone?'<a class="secondary restaurant-call-link" href="tel:'+esc(p.phone.replaceAll('-',''))+'">전화</a>':''}</div></article>`}).join(''):'<div class="empty">검색 결과가 없습니다.</div>';
   loadGoogleRestaurantPhotos(list)
@@ -91,6 +101,65 @@ function renderRestaurants(c){
  filters.querySelectorAll('[data-restaurant-area]').forEach(button=>button.onclick=()=>{activeArea=button.dataset.restaurantArea;filters.querySelectorAll('[data-restaurant-area]').forEach(item=>{const selected=item===button;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});draw()});
  input.oninput=draw;draw();
 }
+function renderKakaoRestaurants(c){
+ c.innerHTML=heading('카카오맵 음식점 검색','시·구와 동네 이름으로 검색해보세요.')+`
+ <form id="kakao-restaurant-search" class="assistant-form">
+  <input name="neighborhood" aria-label="동네 이름" placeholder="예: 김포시 구래동" maxlength="80" required>
+  <button class="primary">검색</button>
+ </form>
+ <p class="note" role="status"></p>
+ <div class="cards"></div>
+ <button type="button" id="restaurant-more" hidden>더 보기</button>`;
+ const form=c.querySelector('#kakao-restaurant-search');
+ const search=form.querySelector('button');
+ const results=c.querySelector('.cards');
+ const message=c.querySelector('[role="status"]');
+ const more=c.querySelector('#restaurant-more');
+ const seen=new Set();
+ let neighborhood='',nextPage=1,loading=false;
+
+ async function load(){
+  if(loading)return;
+  loading=true;
+  search.disabled=true;
+  more.disabled=true;
+  message.textContent='카카오맵에서 검색 중…';
+  try{
+   const data=await api('restaurants','POST',{neighborhood,page:nextPage});
+   for(const place of data.places){
+    if(seen.has(place.id))continue;
+    seen.add(place.id);
+    results.insertAdjacentHTML('beforeend',`<article class="card">
+     <h3><a href="https://place.map.kakao.com/${esc(place.id)}" target="_blank" rel="noopener noreferrer">${esc(place.name)}</a></h3>
+     <p>${esc(place.category)} · ${esc(place.address)}</p>
+     ${place.phone?`<p>${esc(place.phone)}</p>`:''}
+    </article>`);
+   }
+   more.hidden=!data.has_more;
+   nextPage++;
+   message.textContent=seen.size?`카카오맵 검색 결과 ${seen.size}곳`:'검색 결과가 없습니다. 시·구를 포함해 검색해보세요.';
+  }catch(error){
+   message.textContent=error.message;
+  }finally{
+   loading=false;
+   search.disabled=false;
+   more.disabled=false;
+  }
+ }
+ form.onsubmit=e=>{
+  e.preventDefault();
+  const name=new FormData(form).get('neighborhood').trim();
+  if(loading||!name)return;
+  neighborhood=name;
+  nextPage=1;
+  seen.clear();
+  results.replaceChildren();
+  more.hidden=true;
+  load();
+ };
+ more.onclick=load;
+}
+
 function renderAssistant(c){
  c.innerHTML=heading('AI 장부 도우미','회원·경기·식대 기록을 평소 말하듯 질문해보세요.')+`<div class="assistant-privacy">질문 문장만 OpenAI로 보내 조회 종류를 분류합니다. 실제 장부 데이터는 일조해 서버에서 조회하며 AI에 전달하지 않습니다. 질문에 전화번호 등 민감한 정보는 입력하지 마세요.</div><div id="assistant-chat" class="assistant-chat">${assistantMessages.length?assistantMessages.map(m=>`<div class="assistant-message ${m.role}"><b>${m.role==='user'?'나':'일조해 AI'}</b><div>${esc(m.text).replaceAll('\n','<br>')}</div></div>`).join(''):'<div class="assistant-welcome"><b>무엇이 궁금하세요?</b><span>기록을 찾아 간단히 답해드릴게요.</span></div>'}</div><div class="assistant-suggestions"><button type="button" data-question="현재 활동 회원은 몇 명이야?">회원 수</button><button type="button" data-question="최근 3개월 동안 한 번도 참석하지 않은 회원 알려줘">최근 미참석 회원</button><button type="button" data-question="참석 기록이 많은 회원 순으로 알려줘">참석 많은 순</button><button type="button" data-question="핸디 낮은 회원 순으로 보여줘">핸디 낮은 순</button><button type="button" data-question="올해 식대 수입과 지출 합계 알려줘">올해 식대 합계</button><button type="button" data-question="현재 식대 잔액은 얼마야?">현재 잔액</button><button type="button" data-question="예정된 경기 알려줘">예정 경기</button><button type="button" data-question="올해 등록된 경기 수 알려줘">올해 경기 수</button></div><form id="assistant-form" class="assistant-form"><input id="assistant-question" name="question" maxlength="500" placeholder="예: 최근 3개월 미참석 회원은?" autocomplete="off" required><button class="primary" ${assistantBusy?'disabled':''}>${assistantBusy?'조회 중…':'질문하기'}</button></form><p class="note">읽기 전용 · 하루 최대 30회 · 답변은 현재 기록을 기준으로 합니다.</p>`;
  const chat=$('#assistant-chat');chat.scrollTop=chat.scrollHeight;

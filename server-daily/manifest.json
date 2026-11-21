@@ -7,7 +7,7 @@
     },
     {
       "path": "app.py",
-      "sha256": "50d5537b62b84cae4b6f817d22b46731d5d9cb7005031929979366682a1fb511"
+      "sha256": "857a9ecf56644a8529130df014335118baa9a5266f1a7ea70f9edb0066af704e"
     },
     {
       "path": "backup-tools/backup_to_s3.py",
@@ -79,7 +79,7 @@
     },
     {
       "path": "golfzon-courses.json",
-      "sha256": "a45cb75a776811d6ec10681d8190020f6782a71bdb3ce9cb414828ea7d7a3f04"
+      "sha256": "3e0bc4d3c798bbfa06ece2f9c696dc6cc89cd3e5f8dd6bebbdf8fbed1802b842"
     },
     {
       "path": "golfzon_results.py",
@@ -88,6 +88,10 @@
     {
       "path": "historical-scores.json",
       "sha256": "f33c18c8d323d7d87e428339787b6c83b30a27dbb488df4323a84a653883a983"
+    },
+    {
+      "path": "kakao_local.py",
+      "sha256": "423843bbab765d188ceb8f14e4605d38c75f2d2d29a39d3de8fc7718c924a8c0"
     },
     {
       "path": "kakao_login_bridge.py",
@@ -103,11 +107,11 @@
     },
     {
       "path": "static/app.js",
-      "sha256": "438218874b9d188b696396461be20ebc61ef4643416f8cf6b7b590069546d53f"
+      "sha256": "bf335055c583d4ea2de9cfd76be09c0d7d211be5c8424740c9f8be07979fd010"
     },
     {
       "path": "static/index.html",
-      "sha256": "0c8fc312cda758a2827002d89fc4731d4eae3a992cb2c854fd710fe6988a3794"
+      "sha256": "342ad709067accae4a6db59a90fdc28f17250b8b69aa4cea8849a8fe277c87b3"
     },
     {
       "path": "static/share.css",

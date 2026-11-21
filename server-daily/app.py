@@ -87,6 +87,16 @@ def application(environ,start_response):
     return send(change_profile_attendance(c,body))
    if path=='/api/courses' and method=='GET':return send(json.loads((ROOT/'golfzon-courses.json').read_text()))
    if not session_is_authenticated(c,token_hash,now):return send({'error':'로그인이 필요합니다.'},'401 Unauthorized')
+   if path=='/api/restaurants' and method=='POST':
+    from kakao_local import PAGE_LIMIT,search_restaurants
+    neighborhood=body.get('neighborhood')
+    page=body.get('page',1)
+    if not isinstance(neighborhood,str) or not 1<=len(neighborhood.strip())<=80:
+     raise ValueError('동네 이름을 1~80자로 입력해주세요.')
+    if type(page) is not int or not 1<=page<=PAGE_LIMIT:
+     raise ValueError('검색 페이지를 확인해주세요.')
+    try:return send(search_restaurants(' '.join(neighborhood.split()),page))
+    except RuntimeError as exc:return send({'error':str(exc)},'503 Service Unavailable')
    if path=='/api/restaurant-photo-status' and method=='GET':
     return send({'enabled':google_places_photos_enabled()})
    if path=='/api/restaurant-photo' and method=='POST':
