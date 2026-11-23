@@ -41,7 +41,7 @@ function render(){if(settingsPageOpen)return;document.querySelectorAll('nav butt
  if(tab==='courses'){renderCourses(c)} if(tab==='restaurants'){renderRestaurants(c)}
  if(tab==='meals'){c.innerHTML=heading('식대정산','기록을 한 장의 정산표 이미지로 저장할 수 있어요.','<button class="primary" id="newmeal">＋ 기록</button>')+'<div class="meal-export-actions"><button type="button" id="meal-image" class="secondary">이미지 저장</button><button type="button" id="meal-xlsx" class="secondary">엑셀 다운로드</button></div><div class="filters"><input id="search" placeholder="장소 검색" aria-label="장소 검색"><select id="month" aria-label="월 선택"><option value="">전체</option>'+[...new Set(state.meals.map(m=>m.date.slice(0,7)))].reverse().map(m=>`<option>${m}</option>`).join('')+'</select></div><div id="meallist" class="cards"></div><p class="note">정산 = 식대 수입 − 지출 · 잔액에는 캐시백·이자 포함<br>이월 잔액 132,843원 · 사진의 빈 지출은 0원으로 입력했습니다.<br>장소명이 다르면 기록을 눌러 수정하세요.</p><button id="csv">↓ CSV 내려받기</button>';$('#newmeal').onclick=()=>mealEditor();$('#search').oninput=mealList;$('#month').onchange=mealList;$('#csv').onclick=exportCSV;$('#meal-image').onclick=exportMealImage;$('#meal-xlsx').onclick=exportMealExcel;mealList()} if(tab==='assistant'){renderAssistant(c)} if(tab==='swing'){renderSwingAnalysisPage(c)}}
 function renderRestaurants(c){
- const areas=['전체','고촌','풍무동','사우동','운양동','구래동'];
+ const areas=['전체','고촌','풍무동','사우동','운양동','구래동','걸포동'];
  const places=[
   {area:'고촌',name:'최강숯불닭갈비',category:'닭갈비',menu:'숯불 닭갈비',address:'김포시 고촌읍 은행영사정로 37',phone:'031-986-4000',official:'https://www.gimpo.go.kr/culture/selectTourCntntsWebView.do?pageIndex=47&pageUnit=8&searchCnd=all&sortTy=RECOMEND&tourNo=2036'},
   {area:'고촌',name:'고촌해물전골전문점',category:'한식·해물',menu:'해물요리',address:'김포시 고촌읍 태리로 41, 1층',phone:'031-984-4388',official:'https://www.gimpo.go.kr/culture/selectTourCntntsWebView.do?ctgry=&key=6867&pageIndex=16&pageUnit=8&searchCnd=all&tourNo=849',photo:'/static/gimpo-gchon-haemul.jpg'},
@@ -60,7 +60,7 @@ function renderRestaurants(c){
   {area:'운양동',name:'명태덕장',category:'한식·생선요리',menu:'시래기명태조림',address:'김포시 김포한강11로331번길 137',phone:'031-982-9990'},
   {area:'운양동',name:'5테이블',category:'양식·이탈리안',menu:'라자냐, 피자, 파스타',address:'김포시 김포한강11로 300, 에비뉴파크 1층'}
  ];
- c.innerHTML=heading('김포 맛집','고촌·풍무동·사우동·운양동·구래동 주변 식당을 찾아보세요.')+
+ c.innerHTML=heading('김포 맛집','고촌·풍무동·사우동·운양동·구래동·걸포동 주변 식당을 찾아보세요.')+
   '<div class="restaurant-area-filters" aria-label="지역 선택">'+areas.map((area,i)=>'<button type="button" class="restaurant-area-button '+(i===0?'selected':'')+'" data-restaurant-area="'+esc(area)+'" aria-pressed="'+(i===0?'true':'false')+'">'+esc(area)+'</button>').join('')+'</div>'+
   '<div class="filters"><input id="restaurant-search" type="search" placeholder="식당·메뉴 검색" aria-label="식당 또는 메뉴 검색"></div><div id="restaurant-list" class="cards"></div>'+
   '<p class="note">김포시 문화관광 등록 식당과 지역 식당 정보를 모았습니다. 메뉴·영업 여부는 바뀔 수 있으니 방문 전 지도에서 확인해주세요.</p>';
@@ -81,14 +81,25 @@ function renderRestaurants(c){
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){observer.unobserve(entry.target);load(entry.target)}}),{rootMargin:'120px'});
   figures.forEach(figure=>observer.observe(figure));
  };
+ const prepareKakaoPhotos=container=>{
+  if(!googlePhotosEnabled)return;
+  container.querySelectorAll('.kakao-restaurant-card').forEach(card=>{
+   if(card.querySelector('.google-restaurant-photo'))return;
+   card.classList.add('restaurant-card','has-photo');
+   card.insertAdjacentHTML('afterbegin',`<figure class="restaurant-photo google-restaurant-photo" data-restaurant-name="${card.dataset.restaurantName}" data-restaurant-address="${card.dataset.restaurantAddress}"><img alt="${esc(card.dataset.restaurantName)} 대표 사진" loading="lazy" decoding="async"><figcaption>Google Maps</figcaption></figure>`);
+  });
+  loadGoogleRestaurantPhotos(container);
+ };
  const kakao=document.createElement('section');
  c.append(kakao);
- renderKakaoRestaurants(kakao);
+ renderKakaoRestaurants(kakao,prepareKakaoPhotos);
  filters.addEventListener('click',event=>{
   const button=event.target.closest('[data-restaurant-area]');
   if(!button)return;
   const area=button.dataset.restaurantArea;
-  kakao.querySelector('[name="neighborhood"]').value=area==='전체'?'김포시':`김포시 ${area==='고촌'?'고촌읍':area}`;
+  const neighborhood=area==='전체'?'김포시':`김포시 ${area==='고촌'?'고촌읍':area}`;
+  kakao.querySelector('[name="neighborhood"]').value=neighborhood;
+  kakao.dispatchEvent(new CustomEvent('restaurant-neighborhood-change',{detail:{neighborhood}}));
  });
  kakao.querySelector('[name="neighborhood"]').value='김포시';
  const draw=()=>{const q=String(input.value||'').trim().toLocaleLowerCase(),found=places.filter(p=>(activeArea==='전체'||p.area===activeArea)&&(!q||[p.name,p.area,p.category,p.menu,p.address].join(' ').toLocaleLowerCase().includes(q)));
@@ -96,12 +107,12 @@ function renderRestaurants(c){
   loadGoogleRestaurantPhotos(list)
  };
  filters.querySelectorAll('[data-restaurant-area]').forEach(button=>button.onclick=()=>{activeArea=button.dataset.restaurantArea;filters.querySelectorAll('[data-restaurant-area]').forEach(item=>{const selected=item===button;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});draw()});
- input.oninput=draw;draw();api('restaurant-photo-status').then(result=>{if(result.enabled&&!googlePhotosEnabled){googlePhotosEnabled=true;draw()}}).catch(()=>{});
+ input.oninput=draw;draw();api('restaurant-photo-status').then(result=>{if(result.enabled&&!googlePhotosEnabled){googlePhotosEnabled=true;draw();prepareKakaoPhotos(kakao)}}).catch(()=>{});
 
  filters.querySelectorAll('[data-restaurant-area]').forEach(button=>button.onclick=()=>{activeArea=button.dataset.restaurantArea;filters.querySelectorAll('[data-restaurant-area]').forEach(item=>{const selected=item===button;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected))});draw()});
  input.oninput=draw;draw();
 }
-function renderKakaoRestaurants(c){
+function renderKakaoRestaurants(c,preparePhotos){
  c.innerHTML=heading('카카오맵 음식점 검색','시·구와 동네 이름으로 검색해보세요.')+`
  <form id="kakao-restaurant-search" class="assistant-form">
   <input name="neighborhood" aria-label="동네 이름" placeholder="예: 김포시 구래동" maxlength="80" required>
@@ -116,34 +127,39 @@ function renderKakaoRestaurants(c){
  const message=c.querySelector('[role="status"]');
  const more=c.querySelector('#restaurant-more');
  const seen=new Set();
- let neighborhood='',nextPage=1,loading=false;
+ let neighborhood='',nextPage=1,loading=false,requestId=0;
 
  async function load(){
   if(loading)return;
   loading=true;
+  const currentRequest=++requestId;
   search.disabled=true;
   more.disabled=true;
   message.textContent='카카오맵에서 검색 중…';
   try{
    const data=await api('restaurants','POST',{neighborhood,page:nextPage});
+   if(currentRequest!==requestId)return;
    for(const place of data.places){
     if(seen.has(place.id))continue;
     seen.add(place.id);
-    results.insertAdjacentHTML('beforeend',`<article class="card">
+    results.insertAdjacentHTML('beforeend',`<article class="card kakao-restaurant-card" data-restaurant-name="${esc(place.name)}" data-restaurant-address="${esc(place.address)}">
      <h3><a href="https://place.map.kakao.com/${esc(place.id)}" target="_blank" rel="noopener noreferrer">${esc(place.name)}</a></h3>
      <p>${esc(place.category)} · ${esc(place.address)}</p>
      ${place.phone?`<p>${esc(place.phone)}</p>`:''}
     </article>`);
    }
+   preparePhotos?.(results);
    more.hidden=!data.has_more;
    nextPage++;
    message.textContent=seen.size?`카카오맵 검색 결과 ${seen.size}곳`:'검색 결과가 없습니다. 시·구를 포함해 검색해보세요.';
   }catch(error){
-   message.textContent=error.message;
+   if(currentRequest===requestId)message.textContent=error.message;
   }finally{
-   loading=false;
-   search.disabled=false;
-   more.disabled=false;
+   if(currentRequest===requestId){
+    loading=false;
+    search.disabled=false;
+    more.disabled=false;
+   }
   }
  }
  form.onsubmit=e=>{
@@ -158,6 +174,24 @@ function renderKakaoRestaurants(c){
   load();
  };
  more.onclick=load;
+ c.addEventListener('restaurant-neighborhood-change',event=>{
+  const selected=String(event.detail?.neighborhood||'').trim();
+  requestId++;
+  loading=false;
+  neighborhood='';
+  nextPage=1;
+  seen.clear();
+  results.replaceChildren();
+  more.hidden=true;
+  search.disabled=false;
+  more.disabled=false;
+  message.textContent=selected?'카카오맵에서 검색 중…':'';
+  if(selected){
+   neighborhood=selected;
+   nextPage=1;
+   load();
+  }
+ });
 }
 
 function renderAssistant(c){

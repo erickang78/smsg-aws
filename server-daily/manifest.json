@@ -79,7 +79,7 @@
     },
     {
       "path": "golfzon-courses.json",
-      "sha256": "db7cf083f45a42829d67013f399a9755ba03433fd9a3aa5fb020e9f457aed2b1"
+      "sha256": "14026d4922bd7099a5f000d588aaeeb962101bf04b288d4891c05e670dbbf0f7"
     },
     {
       "path": "golfzon_results.py",
@@ -107,11 +107,11 @@
     },
     {
       "path": "static/app.js",
-      "sha256": "c0858ca414d2d30fdfc2444514112cd010ddd17a027886a4426907e0be0ba708"
+      "sha256": "9be68c9b4924c83823492dc30f154d36e26d5d10db134e2cb977b59e67f31588"
     },
     {
       "path": "static/index.html",
-      "sha256": "a6e755d99c7ff5cb5d725397e12005a81e673fa142ab73ab9259ee186ae55784"
+      "sha256": "4d98554310598a280123f61a6fe3b86294e24d6bf14658fe254adfcd4735be42"
     },
     {
       "path": "static/share.css",
