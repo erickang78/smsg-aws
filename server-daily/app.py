@@ -187,6 +187,14 @@ def application(environ,start_response):
     return send(restore_game(c,str(body['id'])))
    if path=='/api/game-participants' and method=='POST':
     return send(update_game_participants(c,str(body['id']),body.get('ids')))
+   if path=='/api/game-grouping-history' and method=='GET':
+    from urllib.parse import parse_qs
+    from grouping_history import list_grouping_history
+    game_id=parse_qs(environ.get('QUERY_STRING','')).get('id',[''])[0]
+    if not game_id:return send({'error':'경기를 선택해주세요.'},'400 Bad Request')
+    if not c.execute('SELECT 1 FROM games WHERE id=? AND deleted_at IS NULL',(game_id,)).fetchone():
+     return send({'error':'경기를 찾을 수 없습니다.'},'404 Not Found')
+    return send({'history':list_grouping_history(c,game_id)})
    if path=='/api/game-groupings' and method=='PUT':
     return send(update_game_grouping(c,str(body['id']),body.get('groups')))
    if path=='/api/game-groupings' and method=='POST':
@@ -252,7 +260,11 @@ def application(environ,start_response):
  except (ValueError,KeyError,TypeError) as e:return send({'error':str(e) or '입력을 확인해주세요.'},'400 Bad Request')
  except Exception:return send({'error':'서버 오류가 발생했습니다. 다시 시도해주세요.'},'500 Internal Server Error')
 
+from grouping_history import init_grouping_history
+
 init()
+with connect() as connection:
+ init_grouping_history(connection)
 with connect() as c:init_game_photos(c);init_meal_photos(c)
 if __name__=='__main__':
  from wsgiref.simple_server import make_server
