@@ -198,7 +198,7 @@ def application(environ,start_response):
    if path=='/api/game-groupings' and method=='PUT':
     return send(update_game_grouping(c,str(body['id']),body.get('groups')))
    if path=='/api/game-groupings' and method=='POST':
-    return send(create_game_grouping(c,str(body['id']),body.get('group_count'),body.get('group_size')))
+    return send(create_game_grouping(c,str(body['id']),body.get('group_count'),body.get('group_size'),body.get('senior_tee_ids',[])))
    if path=='/api/photo-gallery' and method=='GET':
     member_id=current_member_id(c,token_hash,now)
     rows=c.execute('''SELECT p.id,'game' AS source,p.original_name,p.created_at,g.course AS title,g.date AS record_date,m.name AS author
